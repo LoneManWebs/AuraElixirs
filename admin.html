@@ -1,0 +1,3062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Elixir - Admin Panel</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-white: #FFFFFF;
+            --secondary-black: #000000;
+            --light-gray: #F9F9F9;
+            --medium-gray: #E8E8E8;
+            --accent-gold: #D4AF37;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--primary-white);
+            color: var(--secondary-black);
+            line-height: 1.6;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--primary-white);
+            color: var(--secondary-black);
+            height: 100vh;
+            position: fixed;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+            border-right: 1px solid var(--medium-gray);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--secondary-black);
+            font-family: 'Crimson Text', serif;
+        }
+
+        .logo-img {
+            height: 35px;
+            width: auto;
+        }
+
+        .sidebar-menu {
+            padding: 1rem 0;
+        }
+
+        .menu-item {
+            padding: 0.8rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #555;
+            text-decoration: none;
+            transition: all 0.3s;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--light-gray);
+            color: var(--secondary-black);
+            border-left: 3px solid var(--secondary-black);
+        }
+
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--secondary-black);
+        }
+
+        .menu-section {
+            padding: 1rem 1.5rem 0.5rem;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #888;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+            background: var(--primary-white);
+        }
+
+        /* Header */
+        .top-header {
+            background-color: var(--primary-white);
+            height: var(--header-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+            border-bottom: 1px solid var(--medium-gray);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--secondary-black);
+            cursor: pointer;
+            margin-right: 1rem;
+            display: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--secondary-black);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-white);
+            font-weight: 600;
+            border: 1px solid var(--secondary-black);
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 2rem;
+        }
+
+        .page-title {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title h1 {
+            color: var(--secondary-black);
+            font-size: 1.8rem;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .btn-primary:hover {
+            background-color: #333;
+            border-color: #333;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--secondary-black);
+            color: var(--secondary-black);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--primary-white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.3s;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--secondary-black);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--primary-white);
+            background-color: var(--secondary-black);
+        }
+
+        .icon-products {
+            background-color: var(--secondary-black);
+        }
+
+        .icon-hot {
+            background-color: var(--secondary-black);
+        }
+
+        .icon-featured {
+            background-color: var(--secondary-black);
+        }
+
+        .icon-new {
+            background-color: var(--secondary-black);
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+            color: var(--secondary-black);
+        }
+
+        .stat-info p {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--primary-white);
+            border-radius: 10px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--medium-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            color: var(--secondary-black);
+            font-size: 1.3rem;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+            color: var(--secondary-black);
+        }
+
+        th {
+            background-color: var(--light-gray);
+            font-weight: 600;
+            color: var(--secondary-black);
+        }
+
+        tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        .status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-in-stock {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .status-low-stock {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .status-out-of-stock {
+            background-color: var(--primary-white);
+            color: #777;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .btn-edit:hover {
+            background-color: #333;
+            border-color: #333;
+        }
+
+        .btn-delete {
+            background-color: var(--primary-white);
+            color: var(--secondary-black);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .btn-delete:hover {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+        }
+
+        /* Forms */
+        .form-container {
+            background-color: var(--primary-white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary-black);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+            background-color: var(--primary-white);
+            color: var(--secondary-black);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-black);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .form-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--secondary-black);
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            color: var(--secondary-black);
+        }
+
+        /* Alert Styles */
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .alert-error {
+            background-color: var(--primary-white);
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid var(--medium-gray);
+            border-top: 4px solid var(--secondary-black);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Category Badges */
+        .category-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        /* Condition Badges */
+        .condition-badges {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .condition-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .badge-hot {
+            background-color: var(--secondary-black);
+        }
+
+        .badge-featured {
+            background-color: var(--secondary-black);
+        }
+
+        .badge-new {
+            background-color: var(--secondary-black);
+        }
+
+        .badge-bestseller {
+            background-color: var(--secondary-black);
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            border: 2px dashed var(--medium-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--light-gray);
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .no-preview {
+            color: var(--medium-gray);
+            font-style: italic;
+        }
+
+        .image-preview.loaded {
+            display: block;
+        }
+
+        /* Orders Styles */
+        .order-card {
+            border: 1px solid var(--medium-gray);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            background-color: var(--primary-white);
+        }
+
+        .order-header {
+            background: var(--primary-white);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .order-info h3 {
+            margin: 0 0 0.5rem 0;
+            color: var(--secondary-black);
+            font-family: 'Crimson Text', serif;
+        }
+
+        .order-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        .order-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .order-total {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-black);
+        }
+
+        .order-details {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .order-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .order-items h4,
+        .order-shipping h4 {
+            margin-bottom: 1rem;
+            color: var(--secondary-black);
+            font-family: 'Crimson Text', serif;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .order-item-info {
+            flex: 1;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--secondary-black);
+        }
+
+        .order-item-price {
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        .order-shipping p {
+            margin-bottom: 0.5rem;
+            color: var(--secondary-black);
+        }
+
+        .order-actions {
+            padding: 1rem 1.5rem;
+            background: var(--primary-white);
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            border-top: 1px solid var(--medium-gray);
+        }
+
+        .btn-success {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-danger {
+            background: var(--primary-white);
+            color: var(--secondary-black);
+            border: 1px solid var(--secondary-black);
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #777;
+            font-style: italic;
+        }
+
+        /* Section Header */
+        .section-header {
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            color: var(--secondary-black);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-family: 'Crimson Text', serif;
+        }
+
+        .section-header p {
+            color: #777;
+        }
+
+        /* Content Card */
+        .content-card {
+            background-color: var(--primary-white);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            border: 1px solid var(--medium-gray);
+        }
+
+        /* Order Status Badges */
+        .status-pending {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--secondary-black);
+        }
+
+        .status-completed {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid var(--secondary-black);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 70px;
+                overflow: visible;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar-header h2 span, .menu-item span, .menu-section {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                transition: all 0.3s;
+            }
+
+            .main-content.sidebar-open {
+                margin-left: 250px;
+            }
+
+            .toggle-sidebar {
+                display: block;
+            }
+
+            .sidebar.active .sidebar-header h2 span,
+            .sidebar.active .menu-item span,
+            .sidebar.active .menu-section {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header-right {
+                gap: 1rem;
+            }
+
+            .admin-profile span {
+                display: none;
+            }
+
+            .form-checkboxes {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .top-header {
+                padding: 0 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 0.7rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .order-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .order-total {
+                align-self: flex-start;
+            }
+
+            .page-title {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-black);
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        @media (max-width: 992px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+        .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--primary-white);
+    margin: 5% auto;
+    padding: 0;
+    border: 1px solid var(--medium-gray);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--medium-gray);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--secondary-black);
+}
+
+.close {
+    color: #777;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--secondary-black);
+}
+
+.modal-body {
+    padding: 1.5rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+    </style>
+</head>
+<body>
+    <!-- Mobile Menu Button -->
+    <button class="mobile-menu-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <img src="https://i.ibb.co/C5d3DL2h/image.png" alt="Aura Elixir Logo" class="logo-img">
+            <h2><span>Aura Elixir</span></h2>
+        </div>
+        
+        <div class="sidebar-menu">
+            <div class="menu-section">Main</div>
+            <a class="menu-item active" data-section="dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            
+            <div class="menu-section">Perfume Management</div>
+            <a class="menu-item" data-section="products">
+                <i class="fas fa-wine-bottle"></i>
+                <span>All Perfumes</span>
+            </a>
+            <a class="menu-item" data-section="add-product">
+                <i class="fas fa-plus-circle"></i>
+                <span>Add Perfume</span>
+            </a>
+            <a class="menu-item" data-section="orders">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Orders</span>
+            </a>
+            <a class="menu-item" data-section="orders-history">
+                <i class="fas fa-history"></i>
+                <span>Orders History</span>
+            </a>
+            
+            <!-- Add this menu item in the sidebar -->
+            <div class="menu-section">Marketing</div>
+            <a class="menu-item" data-section="promo-codes">
+                <i class="fas fa-tag"></i>
+                <span>Promo Codes</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <div class="top-header">
+            <div class="header-left">
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h3>Admin Dashboard</h3>
+            </div>
+            
+            <div class="header-right">
+                <div class="admin-profile">
+                    <div class="admin-avatar">AE</div>
+                    <span>Admin Manager</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Alert Container -->
+            <div id="alert-container"></div>
+
+            <!-- Dashboard Section -->
+            <div class="content-section active" id="dashboard-section">
+                <div class="page-title">
+                    <h1>Dashboard Overview</h1>
+                    <button class="btn btn-primary" onclick="showSection('add-product')">
+                        <i class="fas fa-plus-circle"></i> Add Perfume
+                    </button>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-products">
+                            <i class="fas fa-wine-bottle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-products">0</h3>
+                            <p>Total Perfumes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-hot">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="hot-products">0</h3>
+                            <p>Best Sellers</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-featured">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="featured-products">0</h3>
+                            <p>Featured</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-new">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="new-products">0</h3>
+                            <p>New Arrivals</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Quick Actions</h2>
+                    </div>
+                    <div class="card-body">
+                        <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="showSection('add-product')">
+                                <i class="fas fa-plus-circle"></i> Add New Perfume
+                            </button>
+                            <button class="btn btn-outline" onclick="showSection('products')">
+                                <i class="fas fa-list"></i> View All Perfumes
+                            </button>
+                            <button class="btn btn-outline" onclick="showSection('orders')">
+                                <i class="fas fa-shopping-bag"></i> View Orders
+                            </button>
+                            <button class="btn btn-outline" onclick="showSection('promo-codes')">
+                                <i class="fas fa-tag"></i> Manage Promo Codes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Section -->
+            <div class="content-section" id="products-section">
+                <div class="page-title">
+                    <h1>All Perfumes</h1>
+                    <div>
+                        <button class="btn btn-outline" onclick="showSection('dashboard')" style="margin-right: 10px;">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </button>
+                        <button class="btn btn-primary" onclick="showSection('add-product')">
+                            <i class="fas fa-plus-circle"></i> Add Perfume
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div id="products-loading" class="spinner"></div>
+                        <div id="products-table-container" style="display: none;">
+                            <!-- Products table will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           <!-- Updated form section in admin.html -->
+<!-- Updated Add Product Section -->
+<div class="content-section" id="add-product-section">
+    <div class="page-title">
+        <h1 id="product-form-title">Add New Perfume</h1>
+        <button class="btn btn-outline" onclick="showSection('dashboard')">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </button>
+    </div>
+
+    <div class="form-container">
+        <form id="product-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="product-name">Perfume Name *</label>
+                    <input type="text" id="product-name" class="form-control" placeholder="Enter perfume name" required>
+                </div>
+                
+                <!-- Multi-Select Collection -->
+                <div class="form-group">
+                    <label for="product-collections">Collections *</label>
+                    <div class="collection-selector">
+                        <div class="form-checkboxes">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-winter" name="collections" value="Winter">
+                                <label for="collection-winter">❄️ Winter Scents</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-summer" name="collections" value="Summer">
+                                <label for="collection-summer">☀️ Summer Scents</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-men" name="collections" value="Men">
+                                <label for="collection-men">👔 Men's Collection</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-women" name="collections" value="Women">
+                                <label for="collection-women">👗 Women's Collection</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-unisex" name="collections" value="Unisex">
+                                <label for="collection-unisex">👥 Unisex Perfumes</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-signature" name="collections" value="Signature">
+                                <label for="collection-signature">🌟 Signature Scents</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-oud" name="collections" value="Oud">
+                                <label for="collection-oud">🌳 Oud Collections</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="collection-floral" name="collections" value="Floral">
+                                <label for="collection-floral">🌷 Floral Scents</label>
+                            </div>
+                        </div>
+                    </div>
+                    <small class="form-text" style="color: #777;">Select one or more collections</small>
+                </div>
+            </div>
+            
+            <!-- Gender Selection -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="product-gender">Target Gender</label>
+                    <select id="product-gender" class="form-control">
+                        <option value="">Select Gender</option>
+                        <option value="For Him">For Him</option>
+                        <option value="For Her">For Her</option>
+                        <option value="Unisex">Unisex</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-brand">Brand</label>
+                    <input type="text" id="product-brand" class="form-control" value="Aura Elixir" placeholder="Enter brand name">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product-image" class="form-label">Perfume Image URL</label>
+                <input type="url" id="product-image" class="form-control" 
+                placeholder="https://images.unsplash.com/photo-1541643600914-78b084683601">
+            </div>
+
+            <!-- Image Preview -->                 
+            <div class="form-group">
+                <label class="form-label">Image Preview</label>
+                <div id="imagePreview">
+                    <img id="previewImage" src="" alt="Preview" style="max-width: 200px; display: none;">
+                    <div id="noPreview">No image selected</div>
+                </div>
+            </div>
+            
+            <!-- Size-Based Pricing (Simplified) -->
+            <div class="form-group">
+                <label>Size & Pricing *</label>
+                <div class="size-pricing-container">
+                    <table class="size-pricing-table">
+                        <thead>
+                            <tr>
+                                <th>Size (ml)</th>
+                                <th>Price ($)</th>
+                                <th>Stock</th>
+                            </tr>
+                        </thead>
+                        <tbody id="size-pricing-body">
+                            <tr>
+                                <td>10ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="10" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="10" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>30ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="30" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="30" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>50ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="50" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="50" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>75ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="75" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="75" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>100ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="100" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="100" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>125ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="125" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="125" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>150ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="150" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="150" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>175ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="175" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="175" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>200ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="200" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="200" placeholder="0" min="0"></td>
+                            </tr>
+                            <tr>
+                                <td>250ml</td>
+                                <td><input type="number" class="form-control size-price" data-size="250" placeholder="0.00" min="0" step="0.01"></td>
+                                <td><input type="number" class="form-control size-stock" data-size="250" placeholder="0" min="0"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <small class="form-text" style="color: #777;">Set price and stock for each size</small>
+            </div>
+
+            <!-- Perfume Conditions -->
+            <div class="form-group">
+                <label>Perfume Tags</label>
+                <div class="form-checkboxes">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="is-hot" name="conditions">
+                        <label for="is-hot">🔥 Best Seller</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="is-featured" name="conditions">
+                        <label for="is-featured">⭐ Featured</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="is-new" name="conditions">
+                        <label for="is-new">🆕 New Arrival</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="is-bestseller" name="conditions">
+                        <label for="is-bestseller">🏆 Top Rated</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product-badge">Badge Type</label>
+                <select id="product-badge" class="form-control">
+                    <option value="">No Badge</option>
+                    <option value="new">New Arrival</option>
+                    <option value="bestseller">Best Seller</option>
+                    <option value="exclusive">Exclusive</option>
+                    <option value="limited">Limited Edition</option>
+                </select>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="product-sku">SKU</label>
+                    <input type="text" id="product-sku" class="form-control" placeholder="Enter product SKU">
+                </div>
+                <div class="form-group">
+                    <label for="product-notes">Fragrance Notes</label>
+                    <input type="text" id="product-notes" class="form-control" placeholder="e.g., Rose, Sandalwood, Amber">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="product-description">Description</label>
+                <textarea id="product-description" class="form-control" rows="4" placeholder="Enter perfume description"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="product-features">Key Features (one per line)</label>
+                <textarea id="product-features" class="form-control" rows="3" placeholder="Enter key features, one per line"></textarea>
+            </div>
+            
+            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                <button type="submit" class="btn btn-primary" id="submit-product-btn">
+                    <i class="fas fa-plus-circle"></i> Add Perfume
+                </button>
+                <button type="button" class="btn btn-outline" onclick="showSection('dashboard')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="button" class="btn btn-outline" onclick="cancelEdit()" id="cancel-edit-btn" style="display: none;">
+                    <i class="fas fa-times"></i> Cancel Edit
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+            <!-- Orders Section -->
+            <div id="orders-section" class="content-section">
+                <div class="page-title">
+                    <h1>Pending Orders</h1>
+                    <div>
+                        <button class="btn btn-outline" onclick="showSection('dashboard')" style="margin-right: 10px;">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </button>
+                        <button class="btn btn-outline" onclick="loadOrders()">
+                            <i class="fas fa-sync-alt"></i> Refresh Orders
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pending-orders">0</h3>
+                            <p>Pending Orders</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="completed-orders">0</h3>
+                            <p>Completed Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div id="orders-loading" class="loading">Loading orders...</div>
+                    <div id="orders-container"></div>
+                </div>
+            </div>
+
+            <!-- Orders History Section -->
+            <div id="orders-history-section" class="content-section">
+                <div class="page-title">
+                    <h1>Orders History</h1>
+                    <div>
+                        <button class="btn btn-outline" onclick="showSection('dashboard')" style="margin-right: 10px;">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </button>
+                        <button class="btn btn-outline" onclick="loadOrdersHistory()">
+                            <i class="fas fa-sync-alt"></i> Refresh History
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div id="orders-history-loading" class="loading">Loading orders history...</div>
+                    <div id="orders-history-container"></div>
+                </div>
+            </div>
+
+            <!-- Promo Codes Section - ADDED HERE -->
+            <div class="content-section" id="promo-codes-section">
+                <div class="page-title">
+                    <h1>Promo Code Management</h1>
+                    <div>
+                        <button class="btn btn-outline" onclick="showSection('dashboard')" style="margin-right: 10px;">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </button>
+                        <button class="btn btn-primary" onclick="showAddPromoCode()">
+                            <i class="fas fa-plus-circle"></i> Add Promo Code
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Active Promo Codes</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="promo-codes-loading" class="loading">Loading promo codes...</div>
+                        <div id="promo-codes-container" style="display: none;">
+                            <!-- Promo codes will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Promo Code Modal -->
+    <div id="add-promo-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="promo-modal-title">Add New Promo Code</h3>
+                <span class="close" onclick="closePromoModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="promo-code-form">
+                    <div class="form-group">
+                        <label for="promo-code">Promo Code *</label>
+                        <input type="text" id="promo-code" class="form-control" 
+                               placeholder="e.g., WELCOME10" required
+                               pattern="[A-Z0-9]+" 
+                               title="Uppercase letters and numbers only">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="promo-discount">Discount (%) *</label>
+                            <input type="number" id="promo-discount" class="form-control" 
+                                   min="1" max="100" step="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="promo-type">Discount Type</label>
+                            <select id="promo-type" class="form-control">
+                                <option value="percentage">Percentage</option>
+                                <option value="shipping">Free Shipping</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="promo-min-order">Minimum Order ($)</label>
+                            <input type="number" id="promo-min-order" class="form-control" 
+                                   min="0" step="0.01" value="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="promo-uses">Max Uses</label>
+                            <input type="number" id="promo-uses" class="form-control" 
+                                   min="0" placeholder="Unlimited">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promo-description">Description</label>
+                        <textarea id="promo-description" class="form-control" rows="3" 
+                                  placeholder="e.g., 10% off first purchase"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promo-expiry">Expiry Date</label>
+                        <input type="date" id="promo-expiry" class="form-control">
+                    </div>
+                    
+                    <div class="form-checkboxes">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="promo-active" checked>
+                            <label for="promo-active">Active</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="promo-one-time">
+                            <label for="promo-one-time">One-time use per customer</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Promo Code
+                        </button>
+                        <button type="button" class="btn btn-outline" onclick="closePromoModal()">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = "https://testimonials-andreas-surveillance-moon.trycloudflare.com";
+        let currentEditingId = null;
+        let allOrders = [];
+        let currentEditingPromoId = null;
+
+        // Show/hide sections
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Update menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const menuItem = document.querySelector(`.menu-item[data-section="${sectionName}"]`);
+            if (menuItem) {
+                menuItem.classList.add('active');
+            }
+            
+            // Load data if needed
+            if (sectionName === 'products') {
+                loadProducts();
+            } else if (sectionName === 'dashboard') {
+                loadDashboardStats();
+            } else if (sectionName === 'orders') {
+                console.log('📦 Loading orders section...');
+                loadOrders();
+            } else if (sectionName === 'orders-history') {
+                console.log('📜 Loading orders history section...');
+                loadOrdersHistory();
+            } else if (sectionName === 'promo-codes') {
+                console.log('🎫 Loading promo codes section...');
+                loadPromoCodes();
+            }
+            
+            // Track current section for reloading
+            window.currentSection = sectionName;
+        }
+
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            if (sidebar.classList.contains('active')) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+
+        function openSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.add('active');
+            mainContent.classList.add('sidebar-open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            
+            sidebar.classList.remove('active');
+            mainContent.classList.remove('sidebar-open');
+        }
+
+        // Image preview
+        function previewImage(imageUrl) {
+            const previewImg = document.getElementById('previewImage');
+            const noPreview = document.getElementById('noPreview');
+            
+            if (!previewImg || !noPreview) return;
+            
+            previewImg.style.display = 'none';
+            noPreview.style.display = 'block';
+            
+            if (imageUrl && imageUrl.trim() !== '') {
+                noPreview.innerHTML = '🔄 Loading image...';
+                
+                previewImg.onload = function() {
+                    previewImg.style.display = 'block';
+                    noPreview.style.display = 'none';
+                };
+                
+                previewImg.onerror = function() {
+                    previewImg.style.display = 'none';
+                    noPreview.style.display = 'block';
+                    noPreview.innerHTML = '❌ Unable to load image';
+                };
+                
+                previewImg.src = imageUrl;
+            } else {
+                noPreview.innerHTML = 'No image selected';
+            }
+        }
+
+        // Show alert message
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alert-container');
+            if (!alertContainer) return;
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-${type}">
+                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}"></i>
+                    ${message}
+                </div>
+            `;
+            setTimeout(() => {
+                alertContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return new Intl.NumberFormat('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(price);
+        }
+
+        // Get stock status
+        function getStockStatus(stock) {
+            if (stock === 0) return 'status-out-of-stock';
+            if (stock < 10) return 'status-low-stock';
+            return 'status-in-stock';
+        }
+
+        function getStockStatusText(stock) {
+            if (stock === 0) return 'Out of Stock';
+            if (stock < 10) return 'Low Stock';
+            return 'In Stock';
+        }
+
+        // Load products from API
+        async function loadProducts() {
+            try {
+                const loadingEl = document.getElementById('products-loading');
+                const containerEl = document.getElementById('products-table-container');
+                
+                if (loadingEl) loadingEl.style.display = 'block';
+                if (containerEl) containerEl.style.display = 'none';
+                
+                const response = await fetch(`${API_BASE_URL}/api/products`);
+                if (!response.ok) throw new Error('Failed to fetch perfumes');
+                
+                const products = await response.json();
+                renderProductsTable(products);
+                updateStats(products);
+                
+            } catch (error) {
+                console.error('Error loading products:', error);
+                showAlert('Error loading perfumes: ' + error.message, 'error');
+                
+                const container = document.getElementById('products-table-container');
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #777;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Cannot connect to server</p>
+                            <p>Start the server with: <code>node server.js</code></p>
+                            <button class="btn btn-outline" onclick="loadProducts()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Try Again
+                            </button>
+                        </div>
+                    `;
+                    container.style.display = 'block';
+                }
+                
+                const loadingEl = document.getElementById('products-loading');
+                if (loadingEl) loadingEl.style.display = 'none';
+            }
+        }
+
+
+
+// Edit product function
+async function editProduct(productId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/products/${productId}`);
+        if (!response.ok) {
+            // Fallback to getting all products and filtering
+            const allResponse = await fetch(`${API_BASE_URL}/api/products`);
+            if (!allResponse.ok) throw new Error('Failed to fetch products');
+            
+            const products = await allResponse.json();
+            const product = products.find(p => p.id === productId);
+            
+            if (!product) {
+                showAlert('Perfume not found', 'error');
+                return;
+            }
+            populateEditForm(product);
+        } else {
+            const product = await response.json();
+            populateEditForm(product);
+        }
+        
+    } catch (error) {
+        console.error('Error loading perfume for edit:', error);
+        showAlert('Error loading perfume: ' + error.message, 'error');
+    }
+}
+
+function populateEditForm(product) {
+    // Populate basic fields
+    document.getElementById('product-name').value = product.name || '';
+    document.getElementById('product-gender').value = product.gender || '';
+    document.getElementById('product-brand').value = product.brand || 'Aura Elixir';
+    document.getElementById('product-description').value = product.description || '';
+    document.getElementById('product-notes').value = product.notes || '';
+    document.getElementById('product-sku').value = product.sku || '';
+    document.getElementById('product-features').value = Array.isArray(product.features) ? 
+        product.features.join('\n') : (product.features || '');
+    document.getElementById('is-hot').checked = product.is_hot;
+    document.getElementById('is-featured').checked = product.is_featured;
+    document.getElementById('is-new').checked = product.is_new;
+    document.getElementById('is-bestseller').checked = product.is_bestseller;
+    document.getElementById('product-badge').value = product.badge || '';
+    document.getElementById('product-image').value = product.image_url || product.image || '';
+    
+    // Populate collections (multi-select)
+    const collections = product.collections || (product.category ? product.category.split(',').map(c => c.trim()) : []);
+    document.querySelectorAll('input[name="collections"]').forEach(cb => {
+        cb.checked = collections.includes(cb.value);
+    });
+    
+    // Populate size pricing
+    if (product.size_pricing) {
+        Object.entries(product.size_pricing).forEach(([size, data]) => {
+            const priceInput = document.querySelector(`.size-price[data-size="${size}"]`);
+            const stockInput = document.querySelector(`.size-stock[data-size="${size}"]`);
+            
+            if (priceInput && data.price) priceInput.value = data.price;
+            if (stockInput && data.stock !== undefined) stockInput.value = data.stock;
+        });
+    }
+    
+    // Show image preview
+    previewImage(product.image_url || product.image || '');
+    
+    // Set current editing ID and update form for editing mode
+    currentEditingId = product.id;
+    
+    const titleEl = document.getElementById('product-form-title');
+    const submitBtn = document.getElementById('submit-product-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    
+    if (titleEl) titleEl.textContent = 'Edit Perfume';
+    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Perfume';
+    if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    
+    showSection('add-product');
+    showAlert('Perfume loaded for editing.', 'success');
+}
+
+function populateEditForm(product) {
+    // Populate basic fields
+    document.getElementById('product-name').value = product.name || '';
+    document.getElementById('product-gender').value = product.gender || '';
+    document.getElementById('product-brand').value = product.brand || 'Aura Elixir';
+    document.getElementById('product-description').value = product.description || '';
+    document.getElementById('product-notes').value = product.notes || '';
+    document.getElementById('product-sku').value = product.sku || '';
+    document.getElementById('product-features').value = Array.isArray(product.features) ? 
+        product.features.join('\n') : (product.features || '');
+    document.getElementById('is-hot').checked = product.is_hot;
+    document.getElementById('is-featured').checked = product.is_featured;
+    document.getElementById('is-new').checked = product.is_new;
+    document.getElementById('is-bestseller').checked = product.is_bestseller;
+    document.getElementById('product-badge').value = product.badge || '';
+    document.getElementById('product-image').value = product.image_url || product.image || '';
+    
+    // Populate collections (multi-select)
+    const collections = product.collections || (product.category ? product.category.split(',').map(c => c.trim()) : []);
+    document.querySelectorAll('input[name="collections"]').forEach(cb => {
+        cb.checked = collections.includes(cb.value);
+    });
+    
+    // Populate size pricing
+    if (product.size_pricing) {
+        Object.entries(product.size_pricing).forEach(([size, data]) => {
+            const priceInput = document.querySelector(`.size-price[data-size="${size}"]`);
+            const stockInput = document.querySelector(`.size-stock[data-size="${size}"]`);
+            
+            if (priceInput && data.price) priceInput.value = data.price;
+            if (stockInput && data.stock !== undefined) stockInput.value = data.stock;
+        });
+    }
+    
+    // Show image preview
+    previewImage(product.image_url || product.image || '');
+    
+    // Set current editing ID and update form for editing mode
+    currentEditingId = product.id;
+    
+    const titleEl = document.getElementById('product-form-title');
+    const submitBtn = document.getElementById('submit-product-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    
+    if (titleEl) titleEl.textContent = 'Edit Perfume';
+    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Perfume';
+    if (cancelBtn) cancelBtn.style.display = 'inline-block';
+    
+    showSection('add-product');
+    showAlert('Perfume loaded for editing.', 'success');
+}
+
+// Form submission handler
+// Form submission handler
+
+
+// Reset product form
+// Reset product form
+function resetProductForm() {
+    const form = document.getElementById('product-form');
+    if (form) form.reset();
+    
+    // Clear size pricing
+    document.querySelectorAll('.size-price').forEach(input => input.value = '');
+    document.querySelectorAll('.size-stock').forEach(input => input.value = '');
+    
+    // Clear collections
+    document.querySelectorAll('input[name="collections"]').forEach(cb => cb.checked = false);
+    
+    const imageInput = document.getElementById('product-image');
+    if (imageInput) imageInput.value = '';
+    
+    previewImage('');
+    
+    const titleEl = document.getElementById('product-form-title');
+    const submitBtn = document.getElementById('submit-product-btn');
+    const cancelBtn = document.getElementById('cancel-edit-btn');
+    
+    if (titleEl) titleEl.textContent = 'Add New Perfume';
+    if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-plus-circle"></i> Add Perfume';
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    
+    currentEditingId = null;
+}
+// Add CSS for size pricing table (add to existing CSS)
+const style = document.createElement('style');
+style.textContent = `
+    .size-pricing-container {
+        border: 1px solid var(--medium-gray);
+        border-radius: 8px;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+    .size-pricing-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .size-pricing-table th {
+        background-color: var(--light-gray);
+        padding: 12px 15px;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid var(--medium-gray);
+    }
+
+    .size-pricing-table td {
+        padding: 10px 15px;
+        border-bottom: 1px solid var(--medium-gray);
+    }
+
+    .size-pricing-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .size-pricing-table tr:hover {
+        background-color: var(--light-gray);
+    }
+
+    .size-pricing-table input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid var(--medium-gray);
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .size-pricing-table input:focus {
+        border-color: var(--secondary-black);
+        outline: none;
+    }
+
+    .collection-selector {
+        border: 1px solid var(--medium-gray);
+        border-radius: 8px;
+        padding: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+        background-color: var(--light-gray);
+    }
+`;
+document.head.appendChild(style);
+        // Render products table
+        function renderProductsTable(products) {
+            const container = document.getElementById('products-table-container');
+            const loadingEl = document.getElementById('products-loading');
+            
+            if (!container) return;
+            
+            if (products.length === 0) {
+                container.innerHTML = '<p style="text-align: center; padding: 2rem; color: #777;">No perfumes found. Add your first perfume!</p>';
+                container.style.display = 'block';
+                if (loadingEl) loadingEl.style.display = 'none';
+                return;
+            }
+
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Collection</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Tags</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${products.map(product => `
+                            <tr>
+                                <td>${product.id}</td>
+                                <td>
+                                    <img src="${product.image_url || product.image || 'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'}" 
+                                         alt="${product.name}" 
+                                         style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px; border: 1px solid var(--medium-gray);">
+                                </td>
+                                <td><strong>${product.name}</strong><br><small>${product.description ? product.description.substring(0, 50) + '...' : ''}</small></td>
+                                <td><span class="category-badge">${product.category || 'Uncategorized'}</span></td>
+                                <td>$${formatPrice(product.price)}</td>
+                                <td>${product.stock}</td>
+                                <td>
+                                    <div class="condition-badges">
+                                        ${product.is_hot ? '<span class="condition-badge badge-hot">Best Seller</span>' : ''}
+                                        ${product.is_featured ? '<span class="condition-badge badge-featured">Featured</span>' : ''}
+                                        ${product.is_new ? '<span class="condition-badge badge-new">New</span>' : ''}
+                                        ${product.is_bestseller ? '<span class="condition-badge badge-bestseller">Top Rated</span>' : ''}
+                                        ${!product.is_hot && !product.is_featured && !product.is_new && !product.is_bestseller ? '<span style="color: #777; font-size: 0.8rem;">None</span>' : ''}
+                                    </div>
+                                </td>
+                                <td><span class="status ${getStockStatus(product.stock)}">${getStockStatusText(product.stock)}</span></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn btn-edit" onclick="editProduct('${product.id}')">Edit</button>
+                                        <button class="action-btn btn-delete" onclick="deleteProduct('${product.id}')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+            container.style.display = 'block';
+            if (loadingEl) loadingEl.style.display = 'none';
+        }
+
+        // Update statistics
+        function updateStats(products) {
+            const totalProducts = products.length;
+            const hotProducts = products.filter(p => p.is_hot).length;
+            const featuredProducts = products.filter(p => p.is_featured).length;
+            const newProducts = products.filter(p => p.is_new).length;
+
+            const totalEl = document.getElementById('total-products');
+            const hotEl = document.getElementById('hot-products');
+            const featuredEl = document.getElementById('featured-products');
+            const newEl = document.getElementById('new-products');
+            
+            if (totalEl) totalEl.textContent = totalProducts;
+            if (hotEl) hotEl.textContent = hotProducts;
+            if (featuredEl) featuredEl.textContent = featuredProducts;
+            if (newEl) newEl.textContent = newProducts;
+        }
+
+        // Load dashboard stats
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products`);
+                if (!response.ok) throw new Error('Failed to fetch products');
+                
+                const products = await response.json();
+                updateStats(products);
+                
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
+                // Set all stats to 0 if server is not reachable
+                updateStats([]);
+            }
+        }
+
+        // Reset product form
+        
+
+        // Cancel edit mode
+        function cancelEdit() {
+            resetProductForm();
+            showAlert('Edit cancelled.', 'info');
+        }
+
+        // Edit product
+        async function editProduct(productId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products`);
+                if (!response.ok) throw new Error('Failed to fetch products');
+                
+                const products = await response.json();
+                const product = products.find(p => p.id === productId);
+                
+                if (!product) {
+                    showAlert('Perfume not found', 'error');
+                    return;
+                }
+
+                // Populate form with product data from server
+                const nameEl = document.getElementById('product-name');
+                const categoryEl = document.getElementById('product-category');
+                const priceEl = document.getElementById('product-price');
+                const stockEl = document.getElementById('product-stock');
+                const descEl = document.getElementById('product-description');
+                const skuEl = document.getElementById('product-sku');
+                const sizeEl = document.getElementById('product-size');
+                const featuresEl = document.getElementById('product-features');
+                const hotEl = document.getElementById('is-hot');
+                const featuredEl = document.getElementById('is-featured');
+                const newEl = document.getElementById('is-new');
+                const bestsellerEl = document.getElementById('is-bestseller');
+                const badgeEl = document.getElementById('product-badge');
+                const imageEl = document.getElementById('product-image');
+                
+                if (nameEl) nameEl.value = product.name;
+                if (categoryEl) categoryEl.value = product.category || '';
+                if (priceEl) priceEl.value = product.price;
+                if (stockEl) stockEl.value = product.stock;
+                if (descEl) descEl.value = product.description || '';
+                if (skuEl) skuEl.value = product.sku || '';
+                if (sizeEl) sizeEl.value = product.size || '';
+                if (featuresEl) featuresEl.value = Array.isArray(product.features) ? 
+                    product.features.join('\n') : (product.features || '');
+                if (hotEl) hotEl.checked = product.is_hot;
+                if (featuredEl) featuredEl.checked = product.is_featured;
+                if (newEl) newEl.checked = product.is_new;
+                if (bestsellerEl) bestsellerEl.checked = product.is_bestseller;
+                if (badgeEl) badgeEl.value = product.badge || '';
+                if (imageEl) imageEl.value = product.image_url || product.image || '';
+                
+                // Show image preview
+                previewImage(product.image_url || product.image || '');
+                
+                // Set current editing ID and update form for editing mode
+                currentEditingId = productId;
+                
+                const titleEl = document.getElementById('product-form-title');
+                const submitBtn = document.getElementById('submit-product-btn');
+                const cancelBtn = document.getElementById('cancel-edit-btn');
+                
+                if (titleEl) titleEl.textContent = 'Edit Perfume';
+                if (submitBtn) submitBtn.innerHTML = '<i class="fas fa-save"></i> Update Perfume';
+                if (cancelBtn) cancelBtn.style.display = 'inline-block';
+                
+                showSection('add-product');
+                showAlert('Perfume loaded for editing.', 'success');
+            } catch (error) {
+                console.error('Error loading perfume for edit:', error);
+                showAlert('Error loading perfume: ' + error.message, 'error');
+            }
+        }
+
+        // Delete product
+        async function deleteProduct(productId) {
+            if (!confirm('Are you sure you want to delete this perfume? This action cannot be undone.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products/${productId}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showAlert('Perfume deleted successfully!', 'success');
+                    loadProducts(); // Refresh the products list
+                } else {
+                    showAlert('Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting perfume:', error);
+                showAlert('Error deleting perfume: ' + error.message, 'error');
+            }
+        }
+
+        // Form submission handler
+        // Form submission handler
+function setupFormSubmission() {
+    const form = document.getElementById('product-form');
+    if (!form) return;
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Get form values
+        const nameEl = document.getElementById('product-name');
+        const genderEl = document.getElementById('product-gender');
+        const brandEl = document.getElementById('product-brand');
+        const descEl = document.getElementById('product-description');
+        const notesEl = document.getElementById('product-notes');
+        const skuEl = document.getElementById('product-sku');
+        const featuresEl = document.getElementById('product-features');
+        const hotEl = document.getElementById('is-hot');
+        const featuredEl = document.getElementById('is-featured');
+        const newEl = document.getElementById('is-new');
+        const bestsellerEl = document.getElementById('is-bestseller');
+        const badgeEl = document.getElementById('product-badge');
+        const imageEl = document.getElementById('product-image');
+        
+        // Get collections (multi-select)
+        const collectionCheckboxes = document.querySelectorAll('input[name="collections"]:checked');
+        const collections = Array.from(collectionCheckboxes).map(cb => cb.value);
+        
+        // Get size pricing
+        const sizePricing = {};
+        const sizes = [10, 30, 50, 75, 100, 125, 150, 175, 200, 250];
+        
+        sizes.forEach(size => {
+            const priceInput = document.querySelector(`.size-price[data-size="${size}"]`);
+            const stockInput = document.querySelector(`.size-stock[data-size="${size}"]`);
+            
+            // Get values and convert to numbers, default to 0 if empty
+            const price = priceInput && priceInput.value !== '' ? parseFloat(priceInput.value) : 0;
+            const stock = stockInput && stockInput.value !== '' ? parseInt(stockInput.value) : 0;
+            
+            // Only include sizes that have price or stock set
+            if (price > 0 || stock > 0) {
+                sizePricing[size] = { price, stock };
+            }
+        });
+
+        console.log('Collected data:', {
+            name: nameEl?.value,
+            collections: collections,
+            sizePricing: sizePricing
+        });
+
+        // Validate required fields
+        if (!nameEl || !nameEl.value.trim()) {
+            showAlert('Perfume name is required', 'error');
+            return;
+        }
+        
+        if (collections.length === 0) {
+            showAlert('Please select at least one collection', 'error');
+            return;
+        }
+        
+        // Validate that at least one size has price
+        const hasValidPrice = Object.values(sizePricing).some(item => item.price > 0);
+        if (!hasValidPrice) {
+            showAlert('Please set price for at least one size', 'error');
+            return;
+        }
+
+        const productData = {
+            name: nameEl.value.trim(),
+            collections: collections,
+            gender: genderEl ? genderEl.value : '',
+            brand: brandEl ? brandEl.value.trim() : 'Aura Elixir',
+            description: descEl ? descEl.value : '',
+            notes: notesEl ? notesEl.value : '',
+            sku: skuEl ? skuEl.value : '',
+            size_pricing: sizePricing,
+            features: featuresEl ? featuresEl.value : '',
+            is_hot: hotEl ? hotEl.checked : false,
+            is_featured: featuredEl ? featuredEl.checked : false,
+            is_new: newEl ? newEl.checked : false,
+            is_bestseller: bestsellerEl ? bestsellerEl.checked : false,
+            badge: badgeEl ? badgeEl.value : '',
+            image_url: imageEl ? imageEl.value.trim() : 'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
+        };
+
+        console.log('Sending product data:', JSON.stringify(productData, null, 2));
+
+        // Handle editing vs creating
+        try {
+            const url = currentEditingId ? 
+                `${API_BASE_URL}/api/products/${currentEditingId}` : 
+                `${API_BASE_URL}/api/products`;
+                
+            const method = currentEditingId ? 'PUT' : 'POST';
+            
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(productData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(`Perfume ${currentEditingId ? 'updated' : 'added'} successfully!`, 'success');
+                resetProductForm();
+                showSection('products');
+            } else {
+                showAlert('Error: ' + result.message, 'error');
+            }
+        } catch (error) {
+            console.error('Error saving product:', error);
+            showAlert('Error saving perfume: ' + error.message, 'error');
+        }
+    });
+}
+
+        // Setup image input event listener
+        function setupImagePreview() {
+            const imageInput = document.getElementById('product-image');
+            if (imageInput) {
+                imageInput.addEventListener('input', function() {
+                    previewImage(this.value);
+                });
+            }
+        }
+
+        // Orders functionality
+        async function loadOrders() {
+            try {
+                const container = document.getElementById('orders-container');
+                const loadingEl = document.getElementById('orders-loading');
+                
+                if (loadingEl) {
+                    loadingEl.style.display = 'block';
+                    loadingEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading orders...';
+                }
+                if (container) container.innerHTML = '';
+                
+                const response = await fetch(`${API_BASE_URL}/api/orders?status=pending`);
+                if (!response.ok) throw new Error('Failed to fetch orders');
+                
+                const orders = await response.json();
+                renderOrdersTable(orders, 'orders-container', false);
+                updateOrdersStats(orders);
+                
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                showAlert('Error loading orders: ' + error.message, 'error');
+                
+                const container = document.getElementById('orders-container');
+                const loadingEl = document.getElementById('orders-loading');
+                
+                if (loadingEl) loadingEl.style.display = 'none';
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #777;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Cannot load orders</p>
+                            <button class="btn btn-outline" onclick="loadOrders()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function loadOrdersHistory() {
+            try {
+                const container = document.getElementById('orders-history-container');
+                const loadingEl = document.getElementById('orders-history-loading');
+                
+                if (loadingEl) {
+                    loadingEl.style.display = 'block';
+                    loadingEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading history...';
+                }
+                if (container) container.innerHTML = '';
+                
+                const response = await fetch(`${API_BASE_URL}/api/orders?status=completed`);
+                if (!response.ok) throw new Error('Failed to fetch orders history');
+                
+                const orders = await response.json();
+                renderOrdersTable(orders, 'orders-history-container', true);
+                
+            } catch (error) {
+                console.error('Error loading orders history:', error);
+                showAlert('Error loading orders history: ' + error.message, 'error');
+                
+                const container = document.getElementById('orders-history-container');
+                const loadingEl = document.getElementById('orders-history-loading');
+                
+                if (loadingEl) loadingEl.style.display = 'none';
+                if (container) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 2rem; color: #777;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                            <p>Cannot load orders history</p>
+                            <button class="btn btn-outline" onclick="loadOrdersHistory()" style="margin-top: 1rem;">
+                                <i class="fas fa-redo"></i> Try Again
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Render orders table
+        function renderOrdersTable(orders, containerId, isHistory = false) {
+            const container = document.getElementById(containerId);
+            const loadingEl = document.getElementById(containerId.replace('container', 'loading'));
+            
+            if (!container) return;
+            
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: #777;">
+                        <i class="fas fa-shopping-bag" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h3>No ${isHistory ? 'completed' : 'pending'} orders</h3>
+                        <p>${isHistory ? 'Completed orders will appear here' : 'New orders will appear here'}</p>
+                    </div>
+                `;
+                container.style.display = 'block';
+                if (loadingEl) loadingEl.style.display = 'none';
+                return;
+            }
+
+            const ordersHTML = orders.map(order => {
+                const orderData = order.order_data || order;
+                const shipping = orderData.shipping || {};
+                const items = orderData.items || [];
+                
+                let total = orderData.total || 0;
+                if (total === 0 && items.length > 0) {
+                    total = items.reduce((sum, item) => {
+                        const price = parseFloat(item.price) || 0;
+                        const quantity = parseInt(item.quantity) || 1;
+                        return sum + (price * quantity);
+                    }, 0);
+                }
+                
+                const addressParts = [
+                    shipping.street || '',
+                    shipping.building || '',
+                    shipping.apartment ? 'Apartment ' + shipping.apartment : '',
+                    shipping.floor ? 'Floor ' + shipping.floor : ''
+                ].filter(part => part.trim() !== '');
+
+                const formattedAddress = addressParts.length > 0 ? 
+                    addressParts.join(', ') : 'Address not specified';
+                
+                const area = shipping.area || shipping.city || orderData.region || 'Not specified';
+                const phone = shipping.phone || 'Not provided';
+                const email = shipping.email || 'Not provided';
+                const directions = shipping.directions || shipping.instructions || '';
+                const payment = orderData.payment || '';
+                const shippingMethod = orderData.shippingMethod || '';
+
+                return `
+                    <div class="order-card" data-order-id="${order.id}">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <h3>Order #${order.id}</h3>
+                                <div class="order-meta">
+                                    <span><i class="fas fa-calendar"></i> ${formatOrderDate(order.created_at)}</span>
+                                    <span><i class="fas fa-user"></i> ${shipping.firstName || 'Customer'} ${shipping.lastName || ''}</span>
+                                    <span><i class="fas fa-phone"></i> ${phone}</span>
+                                    <span><i class="fas fa-map-marker-alt"></i> ${area}</span>
+                                    <span class="status-${order.status}">
+                                        ${order.status || 'pending'}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="order-total">
+                                $${formatPrice(total)}
+                            </div>
+                        </div>
+                        
+                        <div class="order-details">
+                            <div class="order-items">
+                                <h4>Items (${items.length})</h4>
+                                ${items.map(item => `
+                                    <div class="order-item">
+                                        <img src="${item.image || 'https://images.unsplash.com/photo-1591369822096-ffd140ec948f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1080&q=80'}" 
+                                             alt="${item.name || 'Product'}" class="order-item-img">
+                                        <div class="order-item-info">
+                                            <div class="order-item-name">${item.name || 'Unnamed Product'}</div>
+                                            <div class="order-item-price">$${formatPrice(item.price || 0)} × ${item.quantity || 1}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            
+                            <div class="order-shipping">
+                                <h4>Shipping Details</h4>
+                                <p><strong>Name:</strong> ${shipping.firstName || 'Customer'} ${shipping.lastName || ''}</p>
+                                <p><strong>Address:</strong> ${formattedAddress}</p>
+                                <p><strong>Area/Region:</strong> ${area}</p>
+                                <p><strong>Phone:</strong> ${phone}</p>
+                                <p><strong>Email:</strong> ${email}</p>
+                                ${directions ? '<p><strong>Instructions:</strong> ' + directions + '</p>' : ''}
+                                ${payment ? '<p><strong>Payment:</strong> ' + payment + '</p>' : ''}
+                                ${shippingMethod ? '<p><strong>Shipping Method:</strong> ' + shippingMethod + '</p>' : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="order-actions">
+                            ${(!isHistory && order.status !== 'completed') ? `
+                                <button class="btn btn-success" onclick="completeOrder('${order.id}')">
+                                    <i class="fas fa-check"></i> Mark as Completed
+                                </button>
+                            ` : ''}
+                            <button class="btn btn-danger" onclick="deleteOrder('${order.id}')">
+                                <i class="fas fa-trash"></i> Delete Order
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            container.innerHTML = ordersHTML;
+            container.style.display = 'block';
+            if (loadingEl) loadingEl.style.display = 'none';
+        }
+
+        function updateOrdersStats(orders) {
+            const pendingOrders = orders.filter(o => o.status === 'pending').length;
+            const completedToday = orders.filter(order => {
+                const orderDate = new Date(order.created_at).toDateString();
+                const today = new Date().toDateString();
+                return order.status === 'completed' && orderDate === today;
+            }).length;
+
+            const pendingEl = document.getElementById('pending-orders');
+            const completedEl = document.getElementById('completed-orders');
+            
+            if (pendingEl) pendingEl.textContent = pendingOrders;
+            if (completedEl) completedEl.textContent = completedToday;
+        }
+
+        // Format order date
+        function formatOrderDate(dateString) {
+            try {
+                if (!dateString) return 'Unknown date';
+                
+                const date = new Date(dateString);
+                if (isNaN(date.getTime())) {
+                    return 'Invalid date';
+                }
+                
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                return 'Date error';
+            }
+        }
+
+        // Complete order
+        async function completeOrder(orderId) {
+            if (!confirm('Mark this order as completed?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status: 'completed' })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('Order marked as completed!');
+                    
+                    // Refresh all order sections
+                    loadOrders();
+                    loadOrdersHistory();
+                } else {
+                    showAlert('Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error completing order:', error);
+                showAlert('Error completing order: ' + error.message, 'error');
+            }
+        }
+
+        // Delete order
+        async function deleteOrder(orderId) {
+            if (!confirm('Are you sure you want to delete this order?')) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/orders/${orderId}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showAlert('Order deleted successfully!', 'success');
+                    
+                    // Refresh all order sections
+                    if (window.currentSection === 'orders') {
+                        loadOrders();
+                    }
+                    if (window.currentSection === 'orders-history') {
+                        loadOrdersHistory();
+                    }
+                } else {
+                    showAlert('Error: ' + result.message, 'error');
+                }
+            } catch (error) {
+                console.error('Error deleting order:', error);
+                showAlert('Error deleting order: ' + error.message, 'error');
+            }
+        }
+
+        // Promo Code Management
+
+async function loadPromoCodes() {
+    try {
+        const container = document.getElementById('promo-codes-container');
+        const loadingEl = document.getElementById('promo-codes-loading');
+        
+        if (loadingEl) loadingEl.style.display = 'block';
+        if (container) container.style.display = 'none';
+        
+        // Load from server
+        const response = await fetch(`${API_BASE_URL}/api/promo-codes`);
+        if (!response.ok) throw new Error('Failed to fetch promo codes');
+        
+        const promoCodes = await response.json();
+        renderPromoCodes(promoCodes);
+        
+    } catch (error) {
+        console.error('Error loading promo codes:', error);
+        showAlert('Error loading promo codes: ' + error.message, 'error');
+        
+        // Show empty state
+        const container = document.getElementById('promo-codes-container');
+        const loadingEl = document.getElementById('promo-codes-loading');
+        
+        if (loadingEl) loadingEl.style.display = 'none';
+        if (container) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: #777;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>Cannot load promo codes</p>
+                    <button class="btn btn-outline" onclick="loadPromoCodes()" style="margin-top: 1rem;">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                </div>
+            `;
+            container.style.display = 'block';
+        }
+    }
+}
+
+function renderPromoCodes(promoCodes) {
+    const container = document.getElementById('promo-codes-container');
+    const loadingEl = document.getElementById('promo-codes-loading');
+    
+    if (!container) return;
+    
+    if (!promoCodes || promoCodes.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: #777;">
+                <i class="fas fa-tag" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <h3>No promo codes</h3>
+                <p>Create your first promo code to offer discounts to customers</p>
+            </div>
+        `;
+        container.style.display = 'block';
+        if (loadingEl) loadingEl.style.display = 'none';
+        return;
+    }
+    
+    const tableHTML = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Discount</th>
+                    <th>Type</th>
+                    <th>Min Order</th>
+                    <th>Uses</th>
+                    <th>Status</th>
+                    <th>Expiry</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${promoCodes.map(promo => `
+                    <tr>
+                        <td><strong>${promo.code}</strong><br><small>${promo.description || ''}</small></td>
+                        <td>${promo.type === 'shipping' ? 'Free Shipping' : `${promo.discount}%`}</td>
+                        <td><span class="category-badge">${promo.type || 'percentage'}</span></td>
+                        <td>$${promo.min_order || '0'}</td>
+                        <td>${promo.used_count || '0'}/${promo.max_uses || '∞'}</td>
+                        <td>
+                            <span class="status ${promo.active ? 'status-in-stock' : 'status-out-of-stock'}">
+                                ${promo.active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td>${promo.expiry_date ? formatDate(promo.expiry_date) : 'Never'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn btn-edit" onclick="editPromoCode('${promo.code}')">Edit</button>
+                                <button class="action-btn btn-delete" onclick="deletePromoCode('${promo.code}')">Delete</button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+    
+    container.innerHTML = tableHTML;
+    container.style.display = 'block';
+    if (loadingEl) loadingEl.style.display = 'none';
+}
+
+function showAddPromoCode() {
+    currentEditingPromoId = null;
+    document.getElementById('promo-modal-title').textContent = 'Add New Promo Code';
+    document.getElementById('promo-code-form').reset();
+    document.getElementById('add-promo-modal').style.display = 'block';
+}
+
+function closePromoModal() {
+    document.getElementById('add-promo-modal').style.display = 'none';
+    resetPromoForm();
+}
+
+function resetPromoForm() {
+    document.getElementById('promo-code-form').reset();
+    currentEditingPromoId = null;
+}
+
+async function editPromoCode(promoCode) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/promo-codes/${promoCode}`);
+        if (!response.ok) throw new Error('Failed to fetch promo code');
+        
+        const promo = await response.json();
+        
+        currentEditingPromoId = promoCode;
+        document.getElementById('promo-modal-title').textContent = 'Edit Promo Code';
+        
+        // Populate form
+        document.getElementById('promo-code').value = promo.code;
+        document.getElementById('promo-discount').value = promo.discount;
+        document.getElementById('promo-type').value = promo.type || 'percentage';
+        document.getElementById('promo-min-order').value = promo.min_order || 0;
+        document.getElementById('promo-uses').value = promo.max_uses || '';
+        document.getElementById('promo-description').value = promo.description || '';
+        document.getElementById('promo-expiry').value = promo.expiry_date || '';
+        document.getElementById('promo-active').checked = promo.active !== false;
+        document.getElementById('promo-one-time').checked = !!promo.one_time;
+        
+        document.getElementById('add-promo-modal').style.display = 'block';
+        
+    } catch (error) {
+        console.error('Error loading promo code for edit:', error);
+        showAlert('Error loading promo code: ' + error.message, 'error');
+    }
+}
+
+async function deletePromoCode(promoCode) {
+    if (!confirm(`Are you sure you want to delete promo code "${promoCode}"?`)) return;
+    
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/promo-codes/${promoCode}`, {
+            method: 'DELETE'
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showAlert('Promo code deleted successfully!', 'success');
+            loadPromoCodes();
+        } else {
+            showAlert('Error: ' + result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting promo code:', error);
+        showAlert('Error deleting promo code: ' + error.message, 'error');
+    }
+}
+
+// Setup promo code form submission
+function setupPromoCodeForm() {
+    const form = document.getElementById('promo-code-form');
+    if (!form) return;
+    
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const promoData = {
+            code: document.getElementById('promo-code').value.trim().toUpperCase(),
+            discount: parseFloat(document.getElementById('promo-discount').value),
+            type: document.getElementById('promo-type').value,
+            min_order: parseFloat(document.getElementById('promo-min-order').value) || 0,
+            max_uses: document.getElementById('promo-uses').value ? parseInt(document.getElementById('promo-uses').value) : null,
+            description: document.getElementById('promo-description').value.trim(),
+            expiry_date: document.getElementById('promo-expiry').value || null,
+            active: document.getElementById('promo-active').checked,
+            one_time: document.getElementById('promo-one-time').checked
+        };
+        
+        try {
+            const url = currentEditingPromoId ? 
+                `${API_BASE_URL}/api/promo-codes/${currentEditingPromoId}` : 
+                `${API_BASE_URL}/api/promo-codes`;
+                
+            const method = currentEditingPromoId ? 'PUT' : 'POST';
+            
+            const response = await fetch(url, {
+                method: method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(promoData)
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showAlert(`Promo code ${currentEditingPromoId ? 'updated' : 'created'} successfully!`, 'success');
+                closePromoModal();
+                loadPromoCodes();
+            } else {
+                showAlert('Error: ' + result.message, 'error');
+            }
+            
+        } catch (error) {
+            console.error('Error saving promo code:', error);
+            showAlert('Error saving promo code: ' + error.message, 'error');
+        }
+    });
+}
+
+function formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+}
+
+        function renderPromoCodes(promoCodes) {
+            const container = document.getElementById('promo-codes-container');
+            const loadingEl = document.getElementById('promo-codes-loading');
+            
+            if (!container) return;
+            
+            if (promoCodes.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 2rem; color: #777;">
+                        <i class="fas fa-tag" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h3>No promo codes</h3>
+                        <p>Create your first promo code to offer discounts to customers</p>
+                    </div>
+                `;
+                container.style.display = 'block';
+                if (loadingEl) loadingEl.style.display = 'none';
+                return;
+            }
+            
+            const tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Discount</th>
+                            <th>Type</th>
+                            <th>Min Order</th>
+                            <th>Uses</th>
+                            <th>Status</th>
+                            <th>Expiry</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${promoCodes.map(promo => `
+                            <tr>
+                                <td><strong>${promo.code}</strong><br><small>${promo.description || ''}</small></td>
+                                <td>${promo.type === 'shipping' ? 'Free Shipping' : `${promo.discount}%`}</td>
+                                <td><span class="category-badge">${promo.type || 'percentage'}</span></td>
+                                <td>$${promo.minOrder || '0'}</td>
+                                <td>${promo.uses || '∞'}</td>
+                                <td>
+                                    <span class="status ${promo.active ? 'status-in-stock' : 'status-out-of-stock'}">
+                                        ${promo.active ? 'Active' : 'Inactive'}
+                                    </span>
+                                </td>
+                                <td>${promo.expiry ? formatDate(promo.expiry) : 'Never'}</td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn btn-edit" onclick="editPromoCode('${promo.code}')">Edit</button>
+                                        <button class="action-btn btn-delete" onclick="deletePromoCode('${promo.code}')">Delete</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            container.innerHTML = tableHTML;
+            container.style.display = 'block';
+            if (loadingEl) loadingEl.style.display = 'none';
+        }
+
+        function showAddPromoCode() {
+            currentEditingPromoId = null;
+            document.getElementById('promo-modal-title').textContent = 'Add New Promo Code';
+            document.getElementById('promo-code-form').reset();
+            document.getElementById('add-promo-modal').style.display = 'block';
+        }
+
+        function closePromoModal() {
+            document.getElementById('add-promo-modal').style.display = 'none';
+            resetPromoForm();
+        }
+
+        function resetPromoForm() {
+            document.getElementById('promo-code-form').reset();
+            currentEditingPromoId = null;
+        }
+
+        function editPromoCode(promoCode) {
+            // Get promo codes from localStorage
+            const promoCodes = JSON.parse(localStorage.getItem('auraElixirPromoCodes')) || [];
+            const promo = promoCodes.find(p => p.code === promoCode);
+            
+            if (!promo) {
+                showAlert('Promo code not found', 'error');
+                return;
+            }
+            
+            currentEditingPromoId = promoCode;
+            document.getElementById('promo-modal-title').textContent = 'Edit Promo Code';
+            
+            // Populate form
+            document.getElementById('promo-code').value = promo.code;
+            document.getElementById('promo-discount').value = promo.discount;
+            document.getElementById('promo-type').value = promo.type || 'percentage';
+            document.getElementById('promo-min-order').value = promo.minOrder || 0;
+            document.getElementById('promo-uses').value = promo.uses || '';
+            document.getElementById('promo-description').value = promo.description || '';
+            document.getElementById('promo-expiry').value = promo.expiry || '';
+            document.getElementById('promo-active').checked = promo.active !== false;
+            document.getElementById('promo-one-time').checked = !!promo.oneTime;
+            
+            document.getElementById('add-promo-modal').style.display = 'block';
+        }
+
+        function deletePromoCode(promoCode) {
+            if (!confirm(`Are you sure you want to delete promo code "${promoCode}"?`)) return;
+            
+            try {
+                const promoCodes = JSON.parse(localStorage.getItem('auraElixirPromoCodes')) || [];
+                const updatedCodes = promoCodes.filter(p => p.code !== promoCode);
+                
+                localStorage.setItem('auraElixirPromoCodes', JSON.stringify(updatedCodes));
+                showAlert('Promo code deleted successfully!', 'success');
+                loadPromoCodes();
+                
+            } catch (error) {
+                console.error('Error deleting promo code:', error);
+                showAlert('Error deleting promo code: ' + error.message, 'error');
+            }
+        }
+
+        // Setup promo code form submission
+        function setupPromoCodeForm() {
+            const form = document.getElementById('promo-code-form');
+            if (!form) return;
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const promoData = {
+                    code: document.getElementById('promo-code').value.trim().toUpperCase(),
+                    discount: parseFloat(document.getElementById('promo-discount').value),
+                    type: document.getElementById('promo-type').value,
+                    minOrder: parseFloat(document.getElementById('promo-min-order').value) || 0,
+                    uses: document.getElementById('promo-uses').value ? parseInt(document.getElementById('promo-uses').value) : null,
+                    description: document.getElementById('promo-description').value.trim(),
+                    expiry: document.getElementById('promo-expiry').value || null,
+                    active: document.getElementById('promo-active').checked,
+                    oneTime: document.getElementById('promo-one-time').checked,
+                    createdAt: new Date().toISOString()
+                };
+                
+                try {
+                    // Try to save to server first
+                    const response = await fetch(`${API_BASE_URL}/api/promo-codes`, {
+                        method: currentEditingPromoId ? 'PUT' : 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(promoData)
+                    });
+                    
+                    if (response.ok) {
+                        // Success
+                        const result = await response.json();
+                        showAlert(`Promo code ${currentEditingPromoId ? 'updated' : 'created'} successfully!`, 'success');
+                        closePromoModal();
+                        loadPromoCodes();
+                    } else {
+                        // Save to localStorage as fallback
+                        savePromoCodeToLocal(promoData);
+                    }
+                    
+                } catch (error) {
+                    // Save to localStorage on network error
+                    savePromoCodeToLocal(promoData);
+                }
+            });
+        }
+
+        function savePromoCodeToLocal(promoData) {
+            try {
+                const promoCodes = JSON.parse(localStorage.getItem('auraElixirPromoCodes')) || [];
+                
+                if (currentEditingPromoId) {
+                    // Update existing
+                    const index = promoCodes.findIndex(p => p.code === currentEditingPromoId);
+                    if (index !== -1) {
+                        promoCodes[index] = { ...promoCodes[index], ...promoData };
+                    }
+                } else {
+                    // Add new
+                    // Check for duplicate
+                    if (promoCodes.some(p => p.code === promoData.code)) {
+                        showAlert('Promo code already exists!', 'error');
+                        return;
+                    }
+                    promoCodes.push(promoData);
+                }
+                
+                localStorage.setItem('auraElixirPromoCodes', JSON.stringify(promoCodes));
+                showAlert(`Promo code ${currentEditingPromoId ? 'updated' : 'created'} successfully!`, 'success');
+                closePromoModal();
+                loadPromoCodes();
+                
+            } catch (error) {
+                console.error('Error saving promo code:', error);
+                showAlert('Error saving promo code: ' + error.message, 'error');
+            }
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎉 Aura Elixir Admin Panel initializing...');
+            
+            // Load initial data
+            loadDashboardStats();
+            
+            // Set up menu item click handlers
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+
+            // Setup form submission
+            setupFormSubmission();
+            
+            // Setup image preview
+            setupImagePreview();
+            
+            // Setup promo code form
+            setupPromoCodeForm();
+
+            // Sidebar toggle
+            const toggleBtn = document.getElementById('toggleSidebar');
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleSidebar);
+            }
+            
+            if (mobileMenuBtn) {
+                mobileMenuBtn.addEventListener('click', toggleSidebar);
+            }
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
+                const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+                
+                if (window.innerWidth <= 992 && 
+                    sidebar.classList.contains('active') &&
+                    !sidebar.contains(event.target) &&
+                    !mobileMenuBtn.contains(event.target) &&
+                    mainContent.querySelector('.toggle-sidebar') &&
+                    !mainContent.querySelector('.toggle-sidebar').contains(event.target)) {
+                    closeSidebar();
+                }
+            });
+
+            console.log('🎉 Aura Elixir Admin Panel initialized successfully!');
+        });
+    </script>
+</body>
+</html>
