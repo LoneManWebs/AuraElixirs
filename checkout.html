@@ -1,0 +1,1583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - Aura Elixir | Lebanese Artisanal Perfumes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-white: #FFFFFF;
+            --secondary-black: #000000;
+            --light-gray: #F9F9F9;
+            --medium-gray: #E8E8E8;
+            --accent-gold: #D4AF37;
+            --dark-gray: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--secondary-black);
+            background-color: var(--primary-white);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Crimson Text', serif;
+            font-weight: 600;
+            color: var(--secondary-black);
+        }
+
+        /* Lebanon flag styling */
+        .lebanon-flag {
+            background: linear-gradient(90deg, 
+                #ED1C24 33%, 
+                #FFFFFF 33%, 
+                #FFFFFF 66%, 
+                #ED1C24 66%);
+            height: 4px;
+            width: 100%;
+            margin: 5px 0;
+            position: relative;
+        }
+
+        .lebanon-flag::after {
+            content: "🇱🇧";
+            position: absolute;
+            left: 50%;
+            top: -10px;
+            transform: translateX(-50%);
+            font-size: 18px;
+            background: var(--primary-white);
+            padding: 0 5px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-white);
+            border-bottom: 1px solid var(--medium-gray);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-bar {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 8px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: var(--secondary-black);
+            letter-spacing: 2px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-black);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s;
+            background: var(--primary-white);
+            border: 1px solid var(--secondary-black);
+        }
+
+        .btn-back:hover {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .logo h1 {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Main Content */
+        .checkout-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+        }
+
+        @media (max-width: 1024px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .order-summary {
+                order: -1;
+            }
+        }
+
+        /* Checkout Steps */
+        .checkout-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--medium-gray);
+        }
+
+        .step.active {
+            color: var(--secondary-black);
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--medium-gray);
+            color: var(--primary-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .step.active .step-number {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+        }
+
+        /* Checkout Sections */
+        .checkout-section {
+            background: var(--primary-white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--medium-gray);
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-black);
+            border-bottom: 2px solid var(--medium-gray);
+            padding-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lebanon-badge {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--secondary-black);
+            font-size: 0.95rem;
+        }
+
+        .form-label .required {
+            color: #dc3545;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+            min-height: 48px;
+            background: var(--primary-white);
+            color: var(--secondary-black);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--secondary-black);
+        }
+
+        /* Checkbox */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--secondary-black);
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .payment-method {
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: var(--primary-white);
+            color: var(--secondary-black);
+        }
+
+        .payment-method.selected {
+            border-color: var(--secondary-black);
+            background: var(--light-gray);
+        }
+
+        .payment-method i {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--secondary-black);
+        }
+
+        .payment-method-cod {
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .payment-method-credit {
+            border-left: 4px solid var(--secondary-black);
+        }
+
+        .coming-soon {
+            background: var(--accent-gold);
+            color: var(--secondary-black);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            display: inline-block;
+        }
+
+        /* Shipping Options */
+        .shipping-options {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .shipping-option {
+            border: 2px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: var(--primary-white);
+            color: var(--secondary-black);
+            position: relative;
+        }
+
+        .shipping-option.selected {
+            border-color: var(--secondary-black);
+            background: var(--light-gray);
+        }
+
+        .shipping-option-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+        }
+
+        .shipping-option-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .shipping-option-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Promo Code Section */
+        .promo-code-section {
+            background: var(--light-gray);
+            border: 1px solid var(--medium-gray);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .promo-code-input-group {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .promo-code-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--medium-gray);
+            border-radius: 5px;
+            background: var(--primary-white);
+            color: var(--secondary-black);
+            font-size: 1rem;
+        }
+
+        .promo-code-input:focus {
+            outline: none;
+            border-color: var(--secondary-black);
+        }
+
+        .btn-promo {
+            padding: 0.75rem 1.5rem;
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-promo:hover {
+            background: #333;
+        }
+
+        .promo-code-message {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            min-height: 1.5rem;
+        }
+
+        .promo-success {
+            color: var(--secondary-black);
+            font-weight: 600;
+        }
+
+        .promo-error {
+            color: #dc3545;
+        }
+
+        /* Order Summary */
+        .order-summary {
+            position: sticky;
+            top: 100px;
+            background: var(--primary-white);
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            height: fit-content;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .order-items {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .order-item:last-child {
+            border-bottom: none;
+        }
+
+        .order-item-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+            flex-shrink: 0;
+            border: 1px solid var(--medium-gray);
+        }
+
+        .order-item-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .order-item-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: 0.95rem;
+            color: var(--secondary-black);
+        }
+
+        .order-item-price {
+            color: var(--secondary-black);
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+
+        .order-totals {
+            border-top: 2px solid var(--medium-gray);
+            padding-top: 1rem;
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--secondary-black);
+        }
+
+        .order-total {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--secondary-black);
+            border-top: 2px solid var(--medium-gray);
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .free-shipping-badge {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            display: block;
+            width: 100%;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            border: 2px solid var(--secondary-black);
+        }
+
+        .btn-primary:hover {
+            background: #333;
+            border-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Delivery Note */
+        .delivery-note {
+            background: rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--secondary-black);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+
+        .delivery-note p {
+            font-size: 0.9rem;
+            color: #666;
+            margin: 0;
+        }
+
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+
+        .empty-cart i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #ddd;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 2rem 5%;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-bottom {
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid #444;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+
+        /* Text Scroller */
+        .shipping-scroller {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 1px;
+        }
+
+        .scroller-content {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scrollText 15s linear infinite;
+        }
+
+        @keyframes scrollText {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Applied Promo Code */
+        .applied-promo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: var(--light-gray);
+            border-radius: 5px;
+            border: 1px solid var(--secondary-black);
+            margin-top: 10px;
+        }
+
+        .remove-promo {
+            background: none;
+            border: 1px solid var(--secondary-black);
+            color: var(--secondary-black);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .remove-promo:hover {
+            background: var(--secondary-black);
+            color: var(--primary-white);
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <p>✨ FREE SHIPPING IN BEIRUT • 📦 WORLDWIDE DELIVERY • 🇱🇧 ARTISANAL PERFUMES FROM LEBANON</p>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <img src="https://i.ibb.co/C5d3DL2h/image.png" alt="Aura Elixir Logo">
+                <h1>Aura Elixir</h1>
+            </a>
+            <div class="lebanon-flag"></div>
+            <a href="index.html" class="btn-back">
+                <i class="fas fa-arrow-left"></i>
+                Back to Shopping
+            </a>
+        </div>
+    </header>
+
+    <!-- Text Scroller -->
+    <div class="shipping-scroller">
+        <div class="scroller-content">
+            🇱🇧 HANDCRAFTED IN LEBANON • ✨ LUXURY PACKAGING • 🎁 COMPLIMENTARY GIFT WRAPPING • 📞 +961 81 000 000
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="checkout-container">
+        <!-- Checkout Form -->
+        <div class="checkout-form">
+            <!-- Checkout Steps -->
+            <div class="checkout-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <span>Shipping</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <span>Payment</span>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Confirmation</span>
+                </div>
+            </div>
+
+            <!-- Shipping Address -->
+            <div class="checkout-section">
+                <h2 class="section-title">
+                    Shipping Address
+                    <span class="lebanon-badge">🇱🇧 Lebanon</span>
+                </h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">First Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="shipping-first-name" required placeholder="John">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="shipping-last-name" required placeholder="Doe">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Phone Number <span class="required">*</span></label>
+                        <input type="tel" class="form-control" id="shipping-phone" placeholder="+961 81 000 000" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" class="form-control" id="shipping-email" placeholder="john@example.com" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Full Address <span class="required">*</span></label>
+                    <input type="text" class="form-control" id="shipping-street" placeholder="Building, Street, Floor, Apartment" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">City/Area <span class="required">*</span></label>
+                        <input type="text" class="form-control" id="shipping-city" placeholder="Hamra, Ashrafieh, Verdun, etc." required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Region <span class="required">*</span></label>
+                        <select class="form-control" id="shipping-region" required>
+                            <option value="">Select Region</option>
+                            <option value="beirut">Beirut</option>
+                            <option value="mount-lebanon">Mount Lebanon</option>
+                            <option value="north">North Lebanon</option>
+                            <option value="south">South Lebanon</option>
+                            <option value="bekaa">Bekaa Valley</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Delivery Instructions</label>
+                    <textarea class="form-control" id="shipping-instructions" rows="3" placeholder="Special delivery notes, building access, landmarks..."></textarea>
+                </div>
+                
+                <div class="delivery-note">
+                    <p><strong>📦 Delivery Information:</strong> Free shipping in Beirut. Other regions: 1-2 business days. We'll contact you to confirm delivery time.</p>
+                </div>
+            </div>
+
+            <!-- Shipping Method -->
+            <div class="checkout-section">
+                <h2 class="section-title">Shipping Method</h2>
+                <div class="shipping-options">
+                    <div class="shipping-option selected" data-method="standard" onclick="selectShipping('standard')">
+                        <div class="shipping-option-title">Standard Delivery</div>
+                        <div class="shipping-option-desc">1-2 business days • FREE in Beirut</div>
+                        <span class="shipping-option-badge">RECOMMENDED</span>
+                    </div>
+                    <div class="shipping-option" data-method="express-beirut" onclick="selectShipping('express-beirut')">
+                        <div class="shipping-option-title">Beirut Same-Day</div>
+                        <div class="shipping-option-desc">Order before 2 PM • Same-day delivery • $5.00</div>
+                    </div>
+                    <div class="shipping-option" data-method="express-regions" onclick="selectShipping('express-regions')">
+                        <div class="shipping-option-title">Express Delivery</div>
+                        <div class="shipping-option-desc">Next-day delivery • Mount Lebanon • $8.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Promo Code Section -->
+            <div class="checkout-section">
+                <h2 class="section-title">Promo Code</h2>
+                <div class="promo-code-section" id="promo-code-container">
+                    <div class="promo-code-input-group">
+                        <input type="text" class="promo-code-input" id="promo-code-input" placeholder="Enter promo code (e.g., WELCOME10)">
+                        <button class="btn-promo" onclick="applyPromoCode()">Apply</button>
+                    </div>
+                    <div class="promo-code-message" id="promo-message"></div>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="checkout-section">
+                <h2 class="section-title">Payment Method</h2>
+                <div class="payment-methods">
+                    <div class="payment-method selected payment-method-cod" data-method="cod" onclick="selectPayment('cod')">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div>Cash on Delivery</div>
+                        <small>Pay when you receive</small>
+                    </div>
+                    <div class="payment-method payment-method-credit" data-method="credit" onclick="selectPayment('credit')">
+                        <i class="fas fa-credit-card"></i>
+                        <div>Credit/Debit Card</div>
+                        <div class="coming-soon">COMING SOON</div>
+                    </div>
+                </div>
+                
+                <div class="delivery-note" style="margin-top: 1rem;">
+                    <p><strong>💳 Payment Note:</strong> Currently we only accept Cash on Delivery (LBP or USD).</p>
+                </div>
+            </div>
+
+            <!-- Complete Order Button -->
+            <button class="btn btn-primary" onclick="completeOrder()">
+                <i class="fas fa-shopping-bag"></i>
+                Complete Order - Cash on Delivery
+            </button>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2 class="section-title">Order Summary</h2>
+            <div class="order-items" id="order-items">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="order-totals">
+                <div class="order-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="order-row">
+                    <span>Shipping</span>
+                    <span id="shipping-cost">FREE</span>
+                </div>
+                <div class="order-row">
+                    <span>Delivery to</span>
+                    <span id="delivery-region">Select region</span>
+                </div>
+                <div class="order-row" id="promo-discount-row" style="display: none;">
+                    <span>Discount</span>
+                    <span id="promo-discount" style="color: var(--secondary-black);">-$0.00</span>
+                </div>
+                <div class="order-row order-total">
+                    <span>Total (USD)</span>
+                    <span id="total">$0.00</span>
+                </div>
+                <div class="order-row">
+                    <span>Total (LBP)</span>
+                    <span id="total-lbp">0 LBP</span>
+                </div>
+            </div>
+            <div class="delivery-note" style="margin-top: 1rem;">
+                <p><strong>💱 Exchange Rate:</strong> 1 USD = 89,500 LBP</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2024 Aura Elixir. All rights reserved. | Artisanal Perfumes from Lebanon</p>
+            <p style="font-size: 0.9rem; color: #aaa; margin-top: 0.5rem;">
+                📞 WhatsApp: +961 81 000 000 • 📍 Beirut, Lebanon • 🕒 Mon-Sat: 9AM-6PM
+            </p>
+            <div style="margin-top: 1rem;">
+                <span style="color: var(--accent-gold); font-weight: bold;">🇱🇧</span>
+                <span style="margin: 0 10px;">Proudly Lebanese Craftsmanship</span>
+                <span style="color: var(--accent-gold); font-weight: bold;">🇱🇧</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration
+        const API_BASE_URL = "https://weather-birds-navigate-employment.trycloudflare.com";
+        const EXCHANGE_RATE = 89500;
+        
+        // Cart and promo code data
+        let cart = [];
+        let selectedPayment = 'cod';
+        let selectedShipping = 'standard';
+        let appliedPromoCode = null;
+
+        // Get cart from localStorage - FIXED VERSION
+        function getCart() {
+            try {
+                const cartData = localStorage.getItem('auraElixirCart');
+                if (cartData) {
+                    return JSON.parse(cartData);
+                }
+                return [];
+            } catch (error) {
+                console.error('Error getting cart:', error);
+                return [];
+            }
+        }
+
+        // Calculate order subtotal - FIXED VERSION
+        function calculateOrderTotal(cartItems) {
+            return cartItems.reduce((total, item) => {
+                const price = parseFloat(item.price) || 0;
+                const quantity = parseInt(item.quantity) || 1;
+                return total + (price * quantity);
+            }, 0);
+        }
+
+        // Calculate subtotal - FIXED VERSION
+        function calculateSubtotal(cartItems) {
+            return cartItems.reduce((total, item) => {
+                const price = parseFloat(item.price) || 0;
+                const quantity = parseInt(item.quantity) || 1;
+                return total + (price * quantity);
+            }, 0);
+        }
+
+        // Load cart items on page load - FIXED VERSION
+        // Load cart items on page load - IMPROVED VERSION
+function loadCartItems() {
+    console.log('🔍 Loading cart items...');
+    
+    // Try multiple methods to get cart data
+    let cartData = null;
+    
+    // Method 1: Check URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('cart')) {
+        try {
+            cartData = JSON.parse(decodeURIComponent(urlParams.get('cart')));
+            console.log('📦 Got cart from URL parameter:', cartData);
+        } catch (e) {
+            console.warn('⚠️ Failed to parse cart from URL:', e);
+        }
+    }
+    
+    // Method 2: Try localStorage
+    if (!cartData) {
+        try {
+            const storedCart = localStorage.getItem('auraElixirCart');
+            if (storedCart) {
+                cartData = JSON.parse(storedCart);
+                console.log('💾 Got cart from localStorage:', cartData);
+            }
+        } catch (e) {
+            console.warn('⚠️ Failed to parse cart from localStorage:', e);
+        }
+    }
+    
+    // Method 3: Try cookies
+    if (!cartData) {
+        try {
+            const cookieMatch = document.cookie.match(/(^| )auraCart=([^;]+)/);
+            if (cookieMatch) {
+                cartData = JSON.parse(decodeURIComponent(cookieMatch[2]));
+                console.log('🍪 Got cart from cookie:', cartData);
+            }
+        } catch (e) {
+            console.warn('⚠️ Failed to parse cart from cookie:', e);
+        }
+    }
+    
+    // Set cart variable
+    cart = cartData || [];
+    console.log(`🛍️ Final cart items: ${cart.length}`, cart);
+    
+    const container = document.getElementById('order-items');
+    if (!container) {
+        console.error('❌ Order items container not found!');
+        return;
+    }
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <h3>Your cart is empty</h3>
+                <p>Add some exquisite perfumes!</p>
+                <div style="margin-top: 1rem;">
+                    <a href="index.html" class="btn btn-primary" style="text-decoration: none; padding: 0.8rem 1.5rem;">
+                        Continue Shopping
+                    </a>
+                </div>
+            </div>
+        `;
+        
+        updateDisplay(0, 0, 0);
+        return;
+    }
+    
+    // Display cart items
+    let subtotal = 0;
+    container.innerHTML = '';
+    
+    cart.forEach(item => {
+        const price = parseFloat(item.price) || 0;
+        const quantity = parseInt(item.quantity) || 1;
+        const itemTotal = price * quantity;
+        subtotal += itemTotal;
+        
+        const imageUrl = item.image_url || item.image || item.imageUrl || 
+            'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+        
+        const itemName = item.name || 'Unknown Perfume';
+        
+        const cartItem = document.createElement('div');
+        cartItem.className = 'order-item';
+        cartItem.innerHTML = `
+            <img src="${imageUrl}" 
+                 alt="${itemName}" 
+                 class="order-item-image"
+                 onerror="this.src='https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+            <div class="order-item-details">
+                <div class="order-item-name">${itemName}</div>
+                <div class="order-item-price">$${formatPrice(price)} × ${quantity}</div>
+                <small style="color: #666;">Subtotal: $${formatPrice(itemTotal)}</small>
+            </div>
+        `;
+        container.appendChild(cartItem);
+    });
+    
+    // Calculate shipping
+    const shipping = calculateShippingCost(subtotal);
+    
+    // Get region
+    const regionSelect = document.getElementById('shipping-region');
+    const regionText = regionSelect && regionSelect.selectedIndex >= 0 ? 
+        regionSelect.options[regionSelect.selectedIndex].text : 'Select region';
+    
+    document.getElementById('delivery-region').textContent = regionText;
+    
+    // Update summary
+    updateOrderSummary(subtotal, shipping);
+}
+
+        // Update display
+        function updateDisplay(subtotal, shipping, discount, total) {
+            document.getElementById('subtotal').textContent = `$${formatPrice(subtotal)}`;
+            
+            if (shipping === 0) {
+                document.getElementById('shipping-cost').innerHTML = '<span class="free-shipping-badge">FREE</span>';
+            } else {
+                document.getElementById('shipping-cost').textContent = `$${formatPrice(shipping)}`;
+            }
+            
+            const finalTotal = total || Math.max(0, subtotal - discount + shipping);
+            document.getElementById('total').textContent = `$${formatPrice(finalTotal)}`;
+            
+            const totalLBP = Math.round(finalTotal * EXCHANGE_RATE);
+            document.getElementById('total-lbp').textContent = `${totalLBP.toLocaleString('en-US')} LBP`;
+        }
+
+        // Update order summary with totals
+        function updateOrderSummary(subtotal, shipping) {
+            // Apply promo discount if any
+            let discount = 0;
+            if (appliedPromoCode && appliedPromoCode.type !== 'shipping') {
+                discount = (subtotal * appliedPromoCode.discount) / 100;
+            }
+            
+            // Adjust shipping if promo code provides free shipping
+            if (appliedPromoCode && appliedPromoCode.type === 'shipping') {
+                shipping = 0;
+            }
+            
+            // Update display
+            updateDisplay(subtotal, shipping, discount);
+            
+            // Update promo discount display
+            const discountRow = document.getElementById('promo-discount-row');
+            const discountAmountEl = document.getElementById('promo-discount');
+            
+            if (discount > 0) {
+                discountRow.style.display = 'flex';
+                discountAmountEl.textContent = `-$${formatPrice(discount)}`;
+            } else {
+                discountRow.style.display = 'none';
+            }
+        }
+
+        // Calculate shipping cost
+        function calculateShippingCost(subtotal) {
+            const regionSelect = document.getElementById('shipping-region');
+            const region = regionSelect ? regionSelect.value : '';
+            
+            // Free shipping for Beirut
+            if (region === 'beirut') {
+                return 0;
+            }
+            
+            // Calculate based on selected shipping method
+            if (selectedShipping === 'express-beirut') {
+                return 5.00;
+            } else if (selectedShipping === 'express-regions') {
+                return 8.00;
+            }
+            
+            // Standard shipping outside Beirut
+            return 3.00;
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Update totals when region changes
+            const regionSelect = document.getElementById('shipping-region');
+            if (regionSelect) {
+                regionSelect.addEventListener('change', function() {
+                    loadCartItems();
+                });
+            }
+
+            // Phone number formatting
+            const phoneInput = document.getElementById('shipping-phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', formatPhoneInput);
+            }
+
+            // Promo code on Enter key
+            const promoInput = document.getElementById('promo-code-input');
+            if (promoInput) {
+                promoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyPromoCode();
+                    }
+                });
+            }
+        }
+
+        // Select shipping method
+        function selectShipping(method) {
+            selectedShipping = method;
+            console.log('🚚 Selected shipping:', method);
+            
+            document.querySelectorAll('.shipping-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const selectedEl = document.querySelector(`.shipping-option[onclick*="${method}"]`);
+            if (selectedEl) {
+                selectedEl.classList.add('selected');
+            }
+            
+            loadCartItems();
+        }
+
+        // Select payment method
+        function selectPayment(method) {
+            selectedPayment = method;
+            console.log('💳 Selected payment:', method);
+            
+            document.querySelectorAll('.payment-method').forEach(el => {
+                el.classList.remove('selected');
+            });
+            
+            const selectedEl = document.querySelector(`.payment-method[onclick*="${method}"]`);
+            if (selectedEl) {
+                selectedEl.classList.add('selected');
+            }
+        }
+
+        // Apply promo code - FIXED VERSION
+        async function applyPromoCode() {
+            const promoInput = document.getElementById('promo-code-input');
+            const messageEl = document.getElementById('promo-message');
+            const promoCode = promoInput.value.trim().toUpperCase();
+            
+            if (!promoCode) {
+                messageEl.textContent = 'Please enter a promo code';
+                messageEl.className = 'promo-code-message promo-error';
+                return;
+            }
+            
+            // Calculate current order total
+            const subtotal = calculateOrderTotal(cart);
+            const shipping = calculateShippingCost(subtotal);
+            const orderTotal = subtotal + shipping;
+            
+            try {
+                // Try server validation first
+                const response = await fetch(`${API_BASE_URL}/api/promo-codes/${promoCode}/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderTotal })
+                });
+                
+                const result = await response.json();
+                
+                if (result.valid) {
+                    // Server validation successful
+                    appliedPromoCode = result.promoCode;
+                    promoInput.disabled = true;
+                    
+                    // Update UI
+                    const promoContainer = document.getElementById('promo-code-container');
+                    promoContainer.innerHTML = `
+                        <div class="applied-promo">
+                            <span><strong>${promoCode}</strong> Applied (${result.promoCode.discount}${result.promoCode.type === 'shipping' ? ' free shipping' : '% off'})</span>
+                            <button onclick="removePromoCode()" class="remove-promo">Remove</button>
+                        </div>
+                        <div class="promo-code-message promo-success">${result.message}</div>
+                    `;
+                    
+                    loadCartItems();
+                } else {
+                    // Try local validation as fallback
+                    validateLocalPromoCode(promoCode, subtotal, messageEl);
+                }
+            } catch (error) {
+                console.error('Error validating promo code:', error);
+                // Use local validation as fallback
+                validateLocalPromoCode(promoCode, subtotal, messageEl);
+            }
+        }
+
+        // Local promo code validation (fallback)
+        function validateLocalPromoCode(code, subtotal, messageEl) {
+            const localPromoCodes = [
+                {
+                    code: 'WELCOME10',
+                    discount: 10,
+                    description: '10% off first order',
+                    minOrder: 0,
+                    type: 'percentage'
+                },
+                {
+                    code: 'FREESHIP',
+                    discount: 100,
+                    description: 'Free shipping',
+                    minOrder: 50,
+                    type: 'shipping'
+                },
+                {
+                    code: 'ELIXIR20',
+                    discount: 20,
+                    description: '20% off entire order',
+                    minOrder: 100,
+                    type: 'percentage'
+                }
+            ];
+            
+            const promo = localPromoCodes.find(p => p.code === code);
+            
+            if (!promo) {
+                messageEl.textContent = 'Invalid promo code';
+                messageEl.className = 'promo-code-message promo-error';
+                removePromoCode();
+                return;
+            }
+            
+            if (subtotal < promo.minOrder) {
+                messageEl.textContent = `Minimum order of $${promo.minOrder} required`;
+                messageEl.className = 'promo-code-message promo-error';
+                removePromoCode();
+                return;
+            }
+            
+            appliedPromoCode = promo;
+            
+            messageEl.textContent = promo.type === 'shipping' ? 
+                'Free shipping applied!' : 
+                `${promo.discount}% discount applied!`;
+            messageEl.className = 'promo-code-message promo-success';
+            
+            // Update UI
+            const promoInput = document.getElementById('promo-code-input');
+            if (promoInput) promoInput.disabled = true;
+            
+            loadCartItems();
+        }
+
+        // Remove promo code
+        function removePromoCode() {
+            appliedPromoCode = null;
+            
+            // Reset promo UI
+            const promoContainer = document.getElementById('promo-code-container');
+            promoContainer.innerHTML = `
+                <div class="promo-code-input-group">
+                    <input type="text" class="promo-code-input" id="promo-code-input" placeholder="Enter promo code (e.g., WELCOME10)">
+                    <button class="btn-promo" onclick="applyPromoCode()">Apply</button>
+                </div>
+                <div class="promo-code-message" id="promo-message"></div>
+            `;
+            
+            loadCartItems();
+        }
+
+        // Format phone number
+        function formatPhoneInput(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            
+            if (value.startsWith('961')) {
+                value = value.substring(3);
+            } else if (value.startsWith('00961')) {
+                value = value.substring(5);
+            } else if (value.startsWith('0')) {
+                value = value.substring(1);
+            }
+            
+            if (value.length > 8) {
+                value = value.substring(0, 8);
+            }
+            
+            let formattedValue = '';
+            if (value.length > 0) {
+                formattedValue = '+961 ';
+                
+                if (value.length <= 2) {
+                    formattedValue += value;
+                } else if (value.length <= 5) {
+                    formattedValue += value.substring(0, 2) + ' ' + value.substring(2);
+                } else {
+                    formattedValue += value.substring(0, 2) + ' ' + value.substring(2, 5) + ' ' + value.substring(5);
+                }
+            }
+            
+            e.target.value = formattedValue;
+        }
+
+        // Format price
+        function formatPrice(price) {
+            return parseFloat(price).toFixed(2);
+        }
+
+        // Validate form
+        function validateForm() {
+            const requiredFields = [
+                'shipping-first-name', 'shipping-last-name', 'shipping-phone',
+                'shipping-email', 'shipping-street', 'shipping-city', 'shipping-region'
+            ];
+            
+            for (let fieldId of requiredFields) {
+                const field = document.getElementById(fieldId);
+                if (!field || !field.value.trim()) {
+                    const label = field.previousElementSibling?.textContent || fieldId.replace('shipping-', '').replace('-', ' ');
+                    alert(`Please fill in ${label}`);
+                    field.focus();
+                    return false;
+                }
+            }
+            
+            // Validate phone number
+            const phone = document.getElementById('shipping-phone').value;
+            if (!isValidLebanesePhone(phone)) {
+                alert('Please enter a valid Lebanese phone number');
+                document.getElementById('shipping-phone').focus();
+                return false;
+            }
+            
+            // Validate email
+            const email = document.getElementById('shipping-email').value;
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                alert('Please enter a valid email address');
+                document.getElementById('shipping-email').focus();
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Validate Lebanese phone number
+        function isValidLebanesePhone(phone) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            return cleanPhone.length >= 8 && cleanPhone.length <= 12;
+        }
+
+        // Complete order
+        // Complete order - UPDATED VERSION
+// Complete order - FIXED VERSION
+// Complete order - DEBUGGED AND FIXED VERSION
+async function completeOrder() {
+    console.log('🚀 Starting completeOrder() function');
+    
+    if (cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    
+    if (!validateForm()) {
+        return;
+    }
+    
+    // Show loading state
+    const completeBtn = document.querySelector('.btn-primary');
+    const originalText = completeBtn.innerHTML;
+    completeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+    completeBtn.disabled = true;
+    
+    try {
+        console.log('📦 Cart items:', cart);
+        
+        // Calculate totals
+        const subtotal = calculateSubtotal(cart);
+        const shipping = calculateShippingCost(subtotal);
+        const discount = appliedPromoCode && appliedPromoCode.type !== 'shipping' ? 
+            (subtotal * appliedPromoCode.discount) / 100 : 0;
+        const total = Math.max(0, subtotal - discount + shipping);
+        const totalLBP = Math.round(total * EXCHANGE_RATE);
+        
+        console.log('💰 Totals calculated:', { subtotal, shipping, discount, total, totalLBP });
+        
+        // Get shipping data
+        const firstName = document.getElementById('shipping-first-name')?.value || '';
+        const lastName = document.getElementById('shipping-last-name')?.value || '';
+        const phone = document.getElementById('shipping-phone')?.value || '';
+        const email = document.getElementById('shipping-email')?.value || '';
+        const street = document.getElementById('shipping-street')?.value || '';
+        const city = document.getElementById('shipping-city')?.value || '';
+        
+        const regionSelect = document.getElementById('shipping-region');
+        const region = regionSelect ? regionSelect.value : '';
+        const regionName = regionSelect ? regionSelect.options[regionSelect.selectedIndex].text : '';
+        
+        const instructions = document.getElementById('shipping-instructions')?.value || '';
+        
+        console.log('📋 Shipping data collected');
+        
+        // Generate order ID
+        const orderId = 'AE' + Date.now().toString().slice(-6);
+        console.log('🆔 Generated order ID:', orderId);
+        
+        // Prepare order data - SIMPLIFIED VERSION
+        const orderData = {
+            orderId: orderId,
+            items: [...cart], // Create a copy of the cart
+            itemsCount: cart.length,
+            shipping: {
+                firstName: firstName,
+                lastName: lastName,
+                phone: phone,
+                email: email,
+                street: street,
+                city: city,
+                region: region,
+                regionName: regionName,
+                instructions: instructions,
+                country: 'Lebanon'
+            },
+            payment: selectedPayment,
+            shippingMethod: selectedShipping,
+            subtotal: subtotal,
+            shippingCost: shipping,
+            discount: discount,
+            total: total,
+            totalLBP: totalLBP,
+            promoCode: appliedPromoCode ? appliedPromoCode.code : null,
+            orderDate: new Date().toISOString(),
+            status: 'pending'
+        };
+        
+        console.log('📊 Order data prepared:', orderData);
+        
+        // ✅ FIX 1: Save to localStorage IMMEDIATELY
+        localStorage.setItem('lastOrder', JSON.stringify(orderData));
+        
+        // ✅ FIX 2: Also save cart separately
+        localStorage.setItem('lastOrderCart', JSON.stringify(cart));
+        
+        // ✅ FIX 3: Save a backup copy
+        localStorage.setItem('orderBackup_' + orderId, JSON.stringify(orderData));
+        
+        console.log('💾 Order saved to localStorage with keys:');
+        console.log('- lastOrder:', localStorage.getItem('lastOrder'));
+        console.log('- lastOrderCart:', localStorage.getItem('lastOrderCart'));
+        
+        // ✅ FIX 4: Verify save worked
+        const savedOrder = localStorage.getItem('lastOrder');
+        if (!savedOrder) {
+            throw new Error('Failed to save order to localStorage');
+        }
+        
+        console.log('✅ Order saved locally successfully');
+        
+        // Try to save to server (optional - won't block order)
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/orders`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+            
+            if (response.ok) {
+                console.log('✅ Order saved to server');
+            } else {
+                console.warn('⚠️ Server save failed, but order was saved locally');
+            }
+        } catch (serverError) {
+            console.warn('⚠️ Server unreachable, order saved locally only:', serverError);
+        }
+        
+        // ✅ FIX 5: Clear main cart but keep backup for confirmation
+        localStorage.removeItem('auraElixirCart');
+        console.log('🗑️ Main cart cleared, backup saved');
+        
+        // ✅ FIX 6: Redirect with delay to ensure localStorage is written
+        // ✅ FIX 6: Redirect with ALL data in URL as backup
+setTimeout(() => {
+    console.log('🔄 Redirecting to confirmation page...');
+    
+    // Create URL with all order data as parameters (backup)
+    const orderDataString = JSON.stringify(orderData);
+    const encodedOrderData = encodeURIComponent(orderDataString);
+    
+    // Redirect with multiple fallbacks
+    window.location.href = `order-confirmation.html?orderId=${orderId}&data=${encodedOrderData}&t=${Date.now()}`;
+}, 200);
+        
+    } catch (error) {
+        console.error('❌ Error processing order:', error);
+        alert('There was an error processing your order. Please try again.\n\nError: ' + error.message);
+        
+        // Reset button
+        if (completeBtn) {
+            completeBtn.innerHTML = originalText;
+            completeBtn.disabled = false;
+        }
+    }
+}
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🛒 Aura Elixir Checkout loaded');
+            
+            // Load cart
+            cart = getCart();
+            console.log(`🛍️ Cart items on load: ${cart.length}`);
+            
+            loadCartItems();
+            setupEventListeners();
+        });
+
+        // Debug function to manually load cart
+        function debugLoadCart() {
+            console.log('🔄 Manually reloading cart...');
+            loadCartItems();
+        }
+
+        // Debug function to show cart
+        function debugShowCart() {
+            console.log('🛒 Current cart:', cart);
+            console.log('🧮 Subtotal:', calculateSubtotal(cart));
+            console.log('🎫 Applied promo:', appliedPromoCode);
+        }
+        // Debug function to check cart
+function debugCart() {
+    console.log('🛒 Current cart:', cart);
+    console.log('📦 Cart length:', cart.length);
+    console.log('💾 localStorage auraElixirCart:', localStorage.getItem('auraElixirCart'));
+    console.log('🍪 Cookies:', document.cookie);
+}
+    </script>
+</body>
+</html>
