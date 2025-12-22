@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>Checkout - Aura Elixir | Lebanese Artisanal Perfumes</title>
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,12 +14,19 @@
             --medium-gray: #E8E8E8;
             --accent-gold: #D4AF37;
             --dark-gray: #333333;
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
         }
 
         body {
@@ -28,12 +35,14 @@
             background-color: var(--primary-white);
             line-height: 1.6;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Crimson Text', serif;
             font-weight: 600;
             color: var(--secondary-black);
+            line-height: 1.3;
         }
 
         /* Lebanon flag styling */
@@ -67,6 +76,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            padding-top: env(safe-area-inset-top, 0px);
         }
 
         .top-bar {
@@ -86,6 +96,7 @@
             padding: 1rem 5%;
             max-width: 1400px;
             margin: 0 auto;
+            min-height: 60px;
         }
 
         .logo {
@@ -94,6 +105,7 @@
             gap: 12px;
             cursor: pointer;
             text-decoration: none;
+            flex-shrink: 0;
         }
 
         .logo img {
@@ -121,23 +133,13 @@
             transition: all 0.3s;
             background: var(--primary-white);
             border: 1px solid var(--secondary-black);
+            flex-shrink: 0;
+            white-space: nowrap;
         }
 
         .btn-back:hover {
             background: var(--secondary-black);
             color: var(--primary-white);
-        }
-
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .logo h1 {
-                font-size: 1.5rem;
-            }
         }
 
         /* Main Content */
@@ -148,17 +150,6 @@
             display: grid;
             grid-template-columns: 1fr 400px;
             gap: 2rem;
-        }
-
-        @media (max-width: 1024px) {
-            .checkout-container {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .order-summary {
-                order: -1;
-            }
         }
 
         /* Checkout Steps */
@@ -241,12 +232,6 @@
             gap: 1rem;
         }
 
-        @media (max-width: 768px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
@@ -269,6 +254,8 @@
             min-height: 48px;
             background: var(--primary-white);
             color: var(--secondary-black);
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .form-control:focus {
@@ -298,12 +285,6 @@
             margin-bottom: 1.5rem;
         }
 
-        @media (max-width: 768px) {
-            .payment-methods {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .payment-method {
             border: 2px solid var(--medium-gray);
             border-radius: 8px;
@@ -318,6 +299,8 @@
             align-items: center;
             background: var(--primary-white);
             color: var(--secondary-black);
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .payment-method.selected {
@@ -369,6 +352,8 @@
             background: var(--primary-white);
             color: var(--secondary-black);
             position: relative;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .shipping-option.selected {
@@ -439,6 +424,7 @@
             cursor: pointer;
             transition: all 0.3s;
             white-space: nowrap;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
         }
 
         .btn-promo:hover {
@@ -463,19 +449,21 @@
         /* Order Summary */
         .order-summary {
             position: sticky;
-            top: 100px;
+            top: 140px;
             background: var(--primary-white);
             border-radius: 10px;
             padding: 1.5rem;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
             height: fit-content;
             border: 1px solid var(--medium-gray);
+            z-index: 100;
         }
 
         .order-items {
             max-height: 300px;
             overflow-y: auto;
             margin-bottom: 1.5rem;
+            -webkit-overflow-scrolling: touch;
         }
 
         .order-item {
@@ -568,6 +556,8 @@
             margin-top: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+            touch-action: manipulation;
         }
 
         .btn-primary {
@@ -617,6 +607,7 @@
             color: var(--primary-white);
             padding: 2rem 5%;
             margin-top: 4rem;
+            padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
         }
 
         .footer-content {
@@ -682,12 +673,277 @@
             background: var(--secondary-black);
             color: var(--primary-white);
         }
+
+        /* Mobile Responsive Improvements */
+        @media (max-width: 1024px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin: 1.5rem auto;
+            }
+            
+            .order-summary {
+                order: -1;
+                position: static;
+                margin-bottom: 1.5rem;
+                top: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .checkout-container {
+                padding: 0 0.75rem;
+                margin: 1rem auto;
+                gap: 1.25rem;
+            }
+            
+            .nav-container {
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 0.75rem 1rem;
+                gap: 0.75rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.3rem;
+            }
+            
+            .btn-back {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.85rem;
+            }
+            
+            .checkout-section {
+                padding: 1.25rem;
+                margin-bottom: 1.25rem;
+            }
+            
+            .section-title {
+                font-size: 1.1rem;
+                margin-bottom: 1.25rem;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+            
+            .lebanon-badge {
+                align-self: flex-start;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .form-control {
+                padding: 0.85rem;
+                min-height: 44px;
+                font-size: 16px;
+            }
+            
+            .payment-methods {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+            
+            .payment-method {
+                min-height: 70px;
+                padding: 0.85rem;
+            }
+            
+            .shipping-option {
+                min-height: 65px;
+                padding: 0.85rem;
+            }
+            
+            .shipping-option-title {
+                font-size: 0.9rem;
+            }
+            
+            .shipping-option-desc {
+                font-size: 0.8rem;
+            }
+            
+            .promo-code-input-group {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .btn-promo {
+                width: 100%;
+                padding: 0.85rem;
+            }
+            
+            .order-summary {
+                padding: 1.25rem;
+                position: static;
+                order: -1;
+                margin-bottom: 1.5rem;
+            }
+            
+            .order-items {
+                max-height: 250px;
+            }
+            
+            .order-item {
+                padding: 0.85rem 0;
+            }
+            
+            .order-item-image {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .btn {
+                padding: 0.9rem 1.5rem;
+                font-size: 0.95rem;
+                min-height: 48px;
+            }
+            
+            .checkout-steps {
+                margin-bottom: 1.5rem;
+                gap: 0.5rem;
+            }
+            
+            .step {
+                font-size: 0.9rem;
+            }
+            
+            .step-number {
+                width: 26px;
+                height: 26px;
+                font-size: 0.8rem;
+            }
+            
+            .top-bar p {
+                font-size: 0.8rem;
+                padding: 6px 0;
+                line-height: 1.3;
+            }
+            
+            .scroller-content {
+                font-size: 0.85rem;
+                animation: scrollText 12s linear infinite;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .checkout-container {
+                padding: 0 0.5rem;
+                margin: 0.75rem auto;
+            }
+            
+            .nav-container {
+                padding: 0.5rem;
+            }
+            
+            .logo h1 {
+                font-size: 1.1rem;
+            }
+            
+            .logo img {
+                height: 32px;
+            }
+            
+            .checkout-section {
+                padding: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            .order-summary {
+                padding: 1rem;
+            }
+            
+            .form-control {
+                padding: 0.75rem;
+            }
+            
+            .btn {
+                padding: 0.85rem 1.25rem;
+                font-size: 0.9rem;
+            }
+            
+            .top-bar {
+                padding: 6px 0;
+            }
+            
+            .top-bar p {
+                font-size: 0.75rem;
+            }
+            
+            .scroller-content {
+                font-size: 0.8rem;
+                animation: scrollText 10s linear infinite;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .logo h1 {
+                font-size: 1rem;
+            }
+            
+            .btn-back span {
+                display: none;
+            }
+            
+            .btn-back {
+                padding: 0.4rem;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                justify-content: center;
+            }
+            
+            .checkout-section {
+                padding: 0.85rem;
+            }
+        }
+
+        /* Desktop specific */
+        @media (min-width: 1025px) {
+            .order-summary {
+                position: sticky;
+                top: 140px;
+                height: fit-content;
+            }
+        }
+
+        /* Fix for iOS Safari 100vh issue */
+        @supports (-webkit-touch-callout: none) {
+            body {
+                min-height: -webkit-fill-available;
+            }
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Focus styles for accessibility */
+        .form-control:focus,
+        .btn:focus,
+        .payment-method:focus,
+        .shipping-option:focus {
+            outline: 2px solid var(--accent-gold);
+            outline-offset: 2px;
+        }
+
+        /* Loading animation */
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
     </style>
 </head>
 <body>
     <!-- Top Bar -->
     <div class="top-bar">
-        <p>✨ FREE SHIPPING IN BEIRUT • 📦 WORLDWIDE DELIVERY • 🇱🇧 ARTISANAL PERFUMES FROM LEBANON</p>
+        <p>✨ FREE SHIPPING IN BEIRUT • 📦 WORLDWIDE DELIVERY • 🇱🇧 ARTISANAL PERFUMES</p>
     </div>
 
     <!-- Header -->
@@ -700,7 +956,7 @@
             <div class="lebanon-flag"></div>
             <a href="index.html" class="btn-back">
                 <i class="fas fa-arrow-left"></i>
-                Back to Shopping
+                <span>Back</span>
             </a>
         </div>
     </header>
@@ -714,6 +970,43 @@
 
     <!-- Main Content -->
     <div class="checkout-container">
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <h2 class="section-title">Order Summary</h2>
+            <div class="order-items" id="order-items">
+                <!-- Cart items will be loaded here -->
+            </div>
+            <div class="order-totals">
+                <div class="order-row">
+                    <span>Subtotal</span>
+                    <span id="subtotal">$0.00</span>
+                </div>
+                <div class="order-row">
+                    <span>Shipping</span>
+                    <span id="shipping-cost">FREE</span>
+                </div>
+                <div class="order-row">
+                    <span>Delivery to</span>
+                    <span id="delivery-region">Select region</span>
+                </div>
+                <div class="order-row" id="promo-discount-row" style="display: none;">
+                    <span>Discount</span>
+                    <span id="promo-discount" style="color: var(--secondary-black);">-$0.00</span>
+                </div>
+                <div class="order-row order-total">
+                    <span>Total (USD)</span>
+                    <span id="total">$0.00</span>
+                </div>
+                <div class="order-row">
+                    <span>Total (LBP)</span>
+                    <span id="total-lbp">0 LBP</span>
+                </div>
+            </div>
+            <div class="delivery-note" style="margin-top: 1rem;">
+                <p><strong>💱 Exchange Rate:</strong> 1 USD = 89,500 LBP</p>
+            </div>
+        </div>
+
         <!-- Checkout Form -->
         <div class="checkout-form">
             <!-- Checkout Steps -->
@@ -848,43 +1141,6 @@
                 Complete Order - Cash on Delivery
             </button>
         </div>
-
-        <!-- Order Summary -->
-        <div class="order-summary">
-            <h2 class="section-title">Order Summary</h2>
-            <div class="order-items" id="order-items">
-                <!-- Cart items will be loaded here -->
-            </div>
-            <div class="order-totals">
-                <div class="order-row">
-                    <span>Subtotal</span>
-                    <span id="subtotal">$0.00</span>
-                </div>
-                <div class="order-row">
-                    <span>Shipping</span>
-                    <span id="shipping-cost">FREE</span>
-                </div>
-                <div class="order-row">
-                    <span>Delivery to</span>
-                    <span id="delivery-region">Select region</span>
-                </div>
-                <div class="order-row" id="promo-discount-row" style="display: none;">
-                    <span>Discount</span>
-                    <span id="promo-discount" style="color: var(--secondary-black);">-$0.00</span>
-                </div>
-                <div class="order-row order-total">
-                    <span>Total (USD)</span>
-                    <span id="total">$0.00</span>
-                </div>
-                <div class="order-row">
-                    <span>Total (LBP)</span>
-                    <span id="total-lbp">0 LBP</span>
-                </div>
-            </div>
-            <div class="delivery-note" style="margin-top: 1rem;">
-                <p><strong>💱 Exchange Rate:</strong> 1 USD = 89,500 LBP</p>
-            </div>
-        </div>
     </div>
 
     <!-- Footer -->
@@ -904,7 +1160,7 @@
 
     <script>
         // Configuration
-        const API_BASE_URL = "https://lauderdale-answering-tattoo-element.trycloudflare.com";
+        const API_BASE_URL = "https://relocation-lawsuit-book-chat.trycloudflare.com ";
         const EXCHANGE_RATE = 89500;
         
         // Cart and promo code data
@@ -913,7 +1169,11 @@
         let selectedShipping = 'standard';
         let appliedPromoCode = null;
 
-        // Get cart from localStorage - FIXED VERSION
+        // Mobile detection
+        const isMobile = () => window.innerWidth <= 768;
+        const isSmallMobile = () => window.innerWidth <= 480;
+
+        // Get cart from localStorage
         function getCart() {
             try {
                 const cartData = localStorage.getItem('auraElixirCart');
@@ -927,7 +1187,7 @@
             }
         }
 
-        // Calculate order subtotal - FIXED VERSION
+        // Calculate order subtotal
         function calculateOrderTotal(cartItems) {
             return cartItems.reduce((total, item) => {
                 const price = parseFloat(item.price) || 0;
@@ -936,7 +1196,7 @@
             }, 0);
         }
 
-        // Calculate subtotal - FIXED VERSION
+        // Calculate subtotal
         function calculateSubtotal(cartItems) {
             return cartItems.reduce((total, item) => {
                 const price = parseFloat(item.price) || 0;
@@ -945,123 +1205,106 @@
             }, 0);
         }
 
-        // Load cart items on page load - FIXED VERSION
-        // Load cart items on page load - IMPROVED VERSION
-function loadCartItems() {
-    console.log('🔍 Loading cart items...');
-    
-    // Try multiple methods to get cart data
-    let cartData = null;
-    
-    // Method 1: Check URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.has('cart')) {
-        try {
-            cartData = JSON.parse(decodeURIComponent(urlParams.get('cart')));
-            console.log('📦 Got cart from URL parameter:', cartData);
-        } catch (e) {
-            console.warn('⚠️ Failed to parse cart from URL:', e);
-        }
-    }
-    
-    // Method 2: Try localStorage
-    if (!cartData) {
-        try {
-            const storedCart = localStorage.getItem('auraElixirCart');
-            if (storedCart) {
-                cartData = JSON.parse(storedCart);
-                console.log('💾 Got cart from localStorage:', cartData);
+        // Load cart items on page load
+        function loadCartItems() {
+            console.log('🔍 Loading cart items...');
+            
+            // Get cart data
+            let cartData = null;
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            if (urlParams.has('cart')) {
+                try {
+                    cartData = JSON.parse(decodeURIComponent(urlParams.get('cart')));
+                    console.log('📦 Got cart from URL parameter');
+                } catch (e) {
+                    console.warn('⚠️ Failed to parse cart from URL:', e);
+                }
             }
-        } catch (e) {
-            console.warn('⚠️ Failed to parse cart from localStorage:', e);
-        }
-    }
-    
-    // Method 3: Try cookies
-    if (!cartData) {
-        try {
-            const cookieMatch = document.cookie.match(/(^| )auraCart=([^;]+)/);
-            if (cookieMatch) {
-                cartData = JSON.parse(decodeURIComponent(cookieMatch[2]));
-                console.log('🍪 Got cart from cookie:', cartData);
+            
+            if (!cartData) {
+                try {
+                    const storedCart = localStorage.getItem('auraElixirCart');
+                    if (storedCart) {
+                        cartData = JSON.parse(storedCart);
+                        console.log('💾 Got cart from localStorage');
+                    }
+                } catch (e) {
+                    console.warn('⚠️ Failed to parse cart from localStorage:', e);
+                }
             }
-        } catch (e) {
-            console.warn('⚠️ Failed to parse cart from cookie:', e);
+            
+            cart = cartData || [];
+            console.log(`🛍️ Cart items loaded: ${cart.length}`);
+            
+            const container = document.getElementById('order-items');
+            if (!container) {
+                console.error('❌ Order items container not found!');
+                return;
+            }
+            
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <h3>Your cart is empty</h3>
+                        <p>Add some exquisite perfumes!</p>
+                        <div style="margin-top: 1rem;">
+                            <a href="index.html" class="btn btn-primary" style="text-decoration: none; padding: 0.8rem 1.5rem;">
+                                Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                updateDisplay(0, 0, 0);
+                return;
+            }
+            
+            // Display cart items
+            let subtotal = 0;
+            container.innerHTML = '';
+            
+            cart.forEach(item => {
+                const price = parseFloat(item.price) || 0;
+                const quantity = parseInt(item.quantity) || 1;
+                const itemTotal = price * quantity;
+                subtotal += itemTotal;
+                
+                const imageUrl = item.image_url || item.image || item.imageUrl || 
+                    'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+                
+                const itemName = item.name || 'Unknown Perfume';
+                
+                const cartItem = document.createElement('div');
+                cartItem.className = 'order-item';
+                cartItem.innerHTML = `
+                    <img src="${imageUrl}" 
+                         alt="${itemName}" 
+                         class="order-item-image"
+                         onerror="this.src='https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                    <div class="order-item-details">
+                        <div class="order-item-name">${itemName}</div>
+                        <div class="order-item-price">$${formatPrice(price)} × ${quantity}</div>
+                        <small style="color: #666;">Subtotal: $${formatPrice(itemTotal)}</small>
+                    </div>
+                `;
+                container.appendChild(cartItem);
+            });
+            
+            // Calculate shipping
+            const shipping = calculateShippingCost(subtotal);
+            
+            // Get region
+            const regionSelect = document.getElementById('shipping-region');
+            const regionText = regionSelect && regionSelect.selectedIndex >= 0 ? 
+                regionSelect.options[regionSelect.selectedIndex].text : 'Select region';
+            
+            document.getElementById('delivery-region').textContent = regionText;
+            
+            // Update summary
+            updateOrderSummary(subtotal, shipping);
         }
-    }
-    
-    // Set cart variable
-    cart = cartData || [];
-    console.log(`🛍️ Final cart items: ${cart.length}`, cart);
-    
-    const container = document.getElementById('order-items');
-    if (!container) {
-        console.error('❌ Order items container not found!');
-        return;
-    }
-    
-    if (cart.length === 0) {
-        container.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <h3>Your cart is empty</h3>
-                <p>Add some exquisite perfumes!</p>
-                <div style="margin-top: 1rem;">
-                    <a href="index.html" class="btn btn-primary" style="text-decoration: none; padding: 0.8rem 1.5rem;">
-                        Continue Shopping
-                    </a>
-                </div>
-            </div>
-        `;
-        
-        updateDisplay(0, 0, 0);
-        return;
-    }
-    
-    // Display cart items
-    let subtotal = 0;
-    container.innerHTML = '';
-    
-    cart.forEach(item => {
-        const price = parseFloat(item.price) || 0;
-        const quantity = parseInt(item.quantity) || 1;
-        const itemTotal = price * quantity;
-        subtotal += itemTotal;
-        
-        const imageUrl = item.image_url || item.image || item.imageUrl || 
-            'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
-        
-        const itemName = item.name || 'Unknown Perfume';
-        
-        const cartItem = document.createElement('div');
-        cartItem.className = 'order-item';
-        cartItem.innerHTML = `
-            <img src="${imageUrl}" 
-                 alt="${itemName}" 
-                 class="order-item-image"
-                 onerror="this.src='https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
-            <div class="order-item-details">
-                <div class="order-item-name">${itemName}</div>
-                <div class="order-item-price">$${formatPrice(price)} × ${quantity}</div>
-                <small style="color: #666;">Subtotal: $${formatPrice(itemTotal)}</small>
-            </div>
-        `;
-        container.appendChild(cartItem);
-    });
-    
-    // Calculate shipping
-    const shipping = calculateShippingCost(subtotal);
-    
-    // Get region
-    const regionSelect = document.getElementById('shipping-region');
-    const regionText = regionSelect && regionSelect.selectedIndex >= 0 ? 
-        regionSelect.options[regionSelect.selectedIndex].text : 'Select region';
-    
-    document.getElementById('delivery-region').textContent = regionText;
-    
-    // Update summary
-    updateOrderSummary(subtotal, shipping);
-}
 
         // Update display
         function updateDisplay(subtotal, shipping, discount, total) {
@@ -1143,6 +1386,12 @@ function loadCartItems() {
             const phoneInput = document.getElementById('shipping-phone');
             if (phoneInput) {
                 phoneInput.addEventListener('input', formatPhoneInput);
+                // Prevent zoom on iOS
+                phoneInput.addEventListener('touchstart', function(e) {
+                    if (isMobile()) {
+                        this.style.fontSize = '16px';
+                    }
+                });
             }
 
             // Promo code on Enter key
@@ -1153,6 +1402,40 @@ function loadCartItems() {
                         applyPromoCode();
                     }
                 });
+            }
+
+            // Improve mobile interactions
+            if (isMobile()) {
+                document.querySelectorAll('.shipping-option, .payment-method').forEach(el => {
+                    el.addEventListener('touchstart', function() {
+                        this.classList.add('active-touch');
+                    });
+                    
+                    el.addEventListener('touchend', function() {
+                        this.classList.remove('active-touch');
+                    });
+                });
+            }
+
+            // Handle window resize
+            let resizeTimeout;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function() {
+                    adjustLayoutForMobile();
+                }, 250);
+            });
+        }
+
+        // Adjust layout for mobile
+        function adjustLayoutForMobile() {
+            const orderSummary = document.querySelector('.order-summary');
+            if (isMobile()) {
+                orderSummary.style.position = 'static';
+                orderSummary.style.top = 'auto';
+            } else {
+                orderSummary.style.position = 'sticky';
+                orderSummary.style.top = '140px';
             }
         }
 
@@ -1165,7 +1448,7 @@ function loadCartItems() {
                 el.classList.remove('selected');
             });
             
-            const selectedEl = document.querySelector(`.shipping-option[onclick*="${method}"]`);
+            const selectedEl = document.querySelector(`.shipping-option[data-method="${method}"]`);
             if (selectedEl) {
                 selectedEl.classList.add('selected');
             }
@@ -1182,13 +1465,13 @@ function loadCartItems() {
                 el.classList.remove('selected');
             });
             
-            const selectedEl = document.querySelector(`.payment-method[onclick*="${method}"]`);
+            const selectedEl = document.querySelector(`.payment-method[data-method="${method}"]`);
             if (selectedEl) {
                 selectedEl.classList.add('selected');
             }
         }
 
-        // Apply promo code - FIXED VERSION
+        // Apply promo code
         async function applyPromoCode() {
             const promoInput = document.getElementById('promo-code-input');
             const messageEl = document.getElementById('promo-message');
@@ -1395,157 +1678,147 @@ function loadCartItems() {
         }
 
         // Complete order
-        // Complete order - UPDATED VERSION
-// Complete order - FIXED VERSION
-// Complete order - DEBUGGED AND FIXED VERSION
-async function completeOrder() {
-    console.log('🚀 Starting completeOrder() function');
-    
-    if (cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-    
-    if (!validateForm()) {
-        return;
-    }
-    
-    // Show loading state
-    const completeBtn = document.querySelector('.btn-primary');
-    const originalText = completeBtn.innerHTML;
-    completeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-    completeBtn.disabled = true;
-    
-    try {
-        console.log('📦 Cart items:', cart);
-        
-        // Calculate totals
-        const subtotal = calculateSubtotal(cart);
-        const shipping = calculateShippingCost(subtotal);
-        const discount = appliedPromoCode && appliedPromoCode.type !== 'shipping' ? 
-            (subtotal * appliedPromoCode.discount) / 100 : 0;
-        const total = Math.max(0, subtotal - discount + shipping);
-        const totalLBP = Math.round(total * EXCHANGE_RATE);
-        
-        console.log('💰 Totals calculated:', { subtotal, shipping, discount, total, totalLBP });
-        
-        // Get shipping data
-        const firstName = document.getElementById('shipping-first-name')?.value || '';
-        const lastName = document.getElementById('shipping-last-name')?.value || '';
-        const phone = document.getElementById('shipping-phone')?.value || '';
-        const email = document.getElementById('shipping-email')?.value || '';
-        const street = document.getElementById('shipping-street')?.value || '';
-        const city = document.getElementById('shipping-city')?.value || '';
-        
-        const regionSelect = document.getElementById('shipping-region');
-        const region = regionSelect ? regionSelect.value : '';
-        const regionName = regionSelect ? regionSelect.options[regionSelect.selectedIndex].text : '';
-        
-        const instructions = document.getElementById('shipping-instructions')?.value || '';
-        
-        console.log('📋 Shipping data collected');
-        
-        // Generate order ID
-        const orderId = 'AE' + Date.now().toString().slice(-6);
-        console.log('🆔 Generated order ID:', orderId);
-        
-        // Prepare order data - SIMPLIFIED VERSION
-        const orderData = {
-            orderId: orderId,
-            items: [...cart], // Create a copy of the cart
-            itemsCount: cart.length,
-            shipping: {
-                firstName: firstName,
-                lastName: lastName,
-                phone: phone,
-                email: email,
-                street: street,
-                city: city,
-                region: region,
-                regionName: regionName,
-                instructions: instructions,
-                country: 'Lebanon'
-            },
-            payment: selectedPayment,
-            shippingMethod: selectedShipping,
-            subtotal: subtotal,
-            shippingCost: shipping,
-            discount: discount,
-            total: total,
-            totalLBP: totalLBP,
-            promoCode: appliedPromoCode ? appliedPromoCode.code : null,
-            orderDate: new Date().toISOString(),
-            status: 'pending'
-        };
-        
-        console.log('📊 Order data prepared:', orderData);
-        
-        // ✅ FIX 1: Save to localStorage IMMEDIATELY
-        localStorage.setItem('lastOrder', JSON.stringify(orderData));
-        
-        // ✅ FIX 2: Also save cart separately
-        localStorage.setItem('lastOrderCart', JSON.stringify(cart));
-        
-        // ✅ FIX 3: Save a backup copy
-        localStorage.setItem('orderBackup_' + orderId, JSON.stringify(orderData));
-        
-        console.log('💾 Order saved to localStorage with keys:');
-        console.log('- lastOrder:', localStorage.getItem('lastOrder'));
-        console.log('- lastOrderCart:', localStorage.getItem('lastOrderCart'));
-        
-        // ✅ FIX 4: Verify save worked
-        const savedOrder = localStorage.getItem('lastOrder');
-        if (!savedOrder) {
-            throw new Error('Failed to save order to localStorage');
-        }
-        
-        console.log('✅ Order saved locally successfully');
-        
-        // Try to save to server (optional - won't block order)
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/orders`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
-            });
+        async function completeOrder() {
+            console.log('🚀 Starting completeOrder() function');
             
-            if (response.ok) {
-                console.log('✅ Order saved to server');
-            } else {
-                console.warn('⚠️ Server save failed, but order was saved locally');
+            if (cart.length === 0) {
+                alert('Your cart is empty!');
+                return;
             }
-        } catch (serverError) {
-            console.warn('⚠️ Server unreachable, order saved locally only:', serverError);
+            
+            if (!validateForm()) {
+                return;
+            }
+            
+            // Show loading state
+            const completeBtn = document.querySelector('.btn-primary');
+            const originalText = completeBtn.innerHTML;
+            completeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            completeBtn.disabled = true;
+            completeBtn.classList.add('loading');
+            
+            try {
+                console.log('📦 Cart items:', cart);
+                
+                // Calculate totals
+                const subtotal = calculateSubtotal(cart);
+                const shipping = calculateShippingCost(subtotal);
+                const discount = appliedPromoCode && appliedPromoCode.type !== 'shipping' ? 
+                    (subtotal * appliedPromoCode.discount) / 100 : 0;
+                const total = Math.max(0, subtotal - discount + shipping);
+                const totalLBP = Math.round(total * EXCHANGE_RATE);
+                
+                console.log('💰 Totals calculated:', { subtotal, shipping, discount, total, totalLBP });
+                
+                // Get shipping data
+                const firstName = document.getElementById('shipping-first-name')?.value || '';
+                const lastName = document.getElementById('shipping-last-name')?.value || '';
+                const phone = document.getElementById('shipping-phone')?.value || '';
+                const email = document.getElementById('shipping-email')?.value || '';
+                const street = document.getElementById('shipping-street')?.value || '';
+                const city = document.getElementById('shipping-city')?.value || '';
+                
+                const regionSelect = document.getElementById('shipping-region');
+                const region = regionSelect ? regionSelect.value : '';
+                const regionName = regionSelect ? regionSelect.options[regionSelect.selectedIndex].text : '';
+                
+                const instructions = document.getElementById('shipping-instructions')?.value || '';
+                
+                console.log('📋 Shipping data collected');
+                
+                // Generate order ID
+                const orderId = 'AE' + Date.now().toString().slice(-6);
+                console.log('🆔 Generated order ID:', orderId);
+                
+                // Prepare order data
+                const orderData = {
+                    orderId: orderId,
+                    items: [...cart],
+                    itemsCount: cart.length,
+                    shipping: {
+                        firstName: firstName,
+                        lastName: lastName,
+                        phone: phone,
+                        email: email,
+                        street: street,
+                        city: city,
+                        region: region,
+                        regionName: regionName,
+                        instructions: instructions,
+                        country: 'Lebanon'
+                    },
+                    payment: selectedPayment,
+                    shippingMethod: selectedShipping,
+                    subtotal: subtotal,
+                    shippingCost: shipping,
+                    discount: discount,
+                    total: total,
+                    totalLBP: totalLBP,
+                    promoCode: appliedPromoCode ? appliedPromoCode.code : null,
+                    orderDate: new Date().toISOString(),
+                    status: 'pending'
+                };
+                
+                console.log('📊 Order data prepared:', orderData);
+                
+                // Save to localStorage
+                localStorage.setItem('lastOrder', JSON.stringify(orderData));
+                localStorage.setItem('lastOrderCart', JSON.stringify(cart));
+                localStorage.setItem('orderBackup_' + orderId, JSON.stringify(orderData));
+                
+                console.log('💾 Order saved to localStorage');
+                
+                // Verify save worked
+                const savedOrder = localStorage.getItem('lastOrder');
+                if (!savedOrder) {
+                    throw new Error('Failed to save order to localStorage');
+                }
+                
+                console.log('✅ Order saved locally successfully');
+                
+                // Try to save to server (optional)
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/orders`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                    });
+                    
+                    if (response.ok) {
+                        console.log('✅ Order saved to server');
+                    } else {
+                        console.warn('⚠️ Server save failed, but order was saved locally');
+                    }
+                } catch (serverError) {
+                    console.warn('⚠️ Server unreachable, order saved locally only:', serverError);
+                }
+                
+                // Clear main cart but keep backup
+                localStorage.removeItem('auraElixirCart');
+                console.log('🗑️ Main cart cleared, backup saved');
+                
+                // Redirect to confirmation page
+                setTimeout(() => {
+                    console.log('🔄 Redirecting to confirmation page...');
+                    
+                    const orderDataString = JSON.stringify(orderData);
+                    const encodedOrderData = encodeURIComponent(orderDataString);
+                    
+                    window.location.href = `order-confirmation.html?orderId=${orderId}&data=${encodedOrderData}&t=${Date.now()}`;
+                }, 300);
+                
+            } catch (error) {
+                console.error('❌ Error processing order:', error);
+                alert('There was an error processing your order. Please try again.\n\nError: ' + error.message);
+                
+                // Reset button
+                if (completeBtn) {
+                    completeBtn.innerHTML = originalText;
+                    completeBtn.disabled = false;
+                    completeBtn.classList.remove('loading');
+                }
+            }
         }
-        
-        // ✅ FIX 5: Clear main cart but keep backup for confirmation
-        localStorage.removeItem('auraElixirCart');
-        console.log('🗑️ Main cart cleared, backup saved');
-        
-        // ✅ FIX 6: Redirect with delay to ensure localStorage is written
-        // ✅ FIX 6: Redirect with ALL data in URL as backup
-setTimeout(() => {
-    console.log('🔄 Redirecting to confirmation page...');
-    
-    // Create URL with all order data as parameters (backup)
-    const orderDataString = JSON.stringify(orderData);
-    const encodedOrderData = encodeURIComponent(orderDataString);
-    
-    // Redirect with multiple fallbacks
-    window.location.href = `order-confirmation.html?orderId=${orderId}&data=${encodedOrderData}&t=${Date.now()}`;
-}, 200);
-        
-    } catch (error) {
-        console.error('❌ Error processing order:', error);
-        alert('There was an error processing your order. Please try again.\n\nError: ' + error.message);
-        
-        // Reset button
-        if (completeBtn) {
-            completeBtn.innerHTML = originalText;
-            completeBtn.disabled = false;
-        }
-    }
-}
 
         // Initialize when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
@@ -1557,27 +1830,33 @@ setTimeout(() => {
             
             loadCartItems();
             setupEventListeners();
+            adjustLayoutForMobile();
+            
+            // Prevent pull-to-refresh on mobile
+            document.body.addEventListener('touchmove', function(e) {
+                if (window.scrollY === 0) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
         });
 
-        // Debug function to manually load cart
+        // Utility functions
         function debugLoadCart() {
             console.log('🔄 Manually reloading cart...');
             loadCartItems();
         }
 
-        // Debug function to show cart
         function debugShowCart() {
             console.log('🛒 Current cart:', cart);
             console.log('🧮 Subtotal:', calculateSubtotal(cart));
             console.log('🎫 Applied promo:', appliedPromoCode);
         }
-        // Debug function to check cart
-function debugCart() {
-    console.log('🛒 Current cart:', cart);
-    console.log('📦 Cart length:', cart.length);
-    console.log('💾 localStorage auraElixirCart:', localStorage.getItem('auraElixirCart'));
-    console.log('🍪 Cookies:', document.cookie);
-}
+
+        function debugCart() {
+            console.log('🛒 Current cart:', cart);
+            console.log('📦 Cart length:', cart.length);
+            console.log('💾 localStorage auraElixirCart:', localStorage.getItem('auraElixirCart'));
+        }
     </script>
 </body>
 </html>
