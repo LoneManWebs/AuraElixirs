@@ -2054,7 +2054,7 @@
 
     <script>
     // Global variables
-        const API_BASE_URL = "https://relocation-lawsuit-book-chat.trycloudflare.com";
+    const API_BASE_URL = "https://relocation-lawsuit-book-chat.trycloudflare.com";
     let cart = JSON.parse(localStorage.getItem('auraElixirCart')) || [];
     let allProducts = [];
     let currentProductDetail = null;
@@ -2854,17 +2854,20 @@ function createProductCard(product) {
     }
 
     function filterByCollection(collectionName) {
-        const collectionProducts = allProducts.filter(product => 
-            product.category && product.category.toLowerCase() === collectionName.toLowerCase()
-        );
-        const grid = document.getElementById('collections-grid');
-        if (grid) {
-            grid.innerHTML = collectionProducts.length > 0 
-                ? collectionProducts.map(product => createProductCard(product)).join('')
-                : `<div class="no-products" style="color: #777; text-align: center; padding: 2rem; grid-column: 1 / -1;">No ${collectionName} perfumes available</div>`;
-        }
-        showTab('collections');
+    const collectionProducts = allProducts.filter(product => {
+        if (!product.category) return false;
+        const productCategories = product.category.split(',').map(cat => cat.trim().toLowerCase());
+        return productCategories.includes(collectionName.toLowerCase());
+    });
+    
+    const grid = document.getElementById('collections-grid');
+    if (grid) {
+        grid.innerHTML = collectionProducts.length > 0 
+            ? collectionProducts.map(product => createProductCard(product)).join('')
+            : `<div class="no-products" style="color: #777; text-align: center; padding: 2rem; grid-column: 1 / -1;">No ${collectionName} perfumes available</div>`;
     }
+    showTab('collections');
+}
 
     function toggleWishlist(element, productId) {
         const icon = element.classList.contains('heart-icon') ? 
@@ -2939,19 +2942,62 @@ function createProductCard(product) {
     }
 
     function filterByCategory(category) {
-        closeMobileMenu(); // Close mobile menu when filtering
+    closeMobileMenu(); // Close mobile menu when filtering
+    
+    // Instead of performing a generic search, filter products by exact category
+    const filteredProducts = allProducts.filter(product => {
+        // Check if product has a category property
+        if (!product.category) return false;
         
-        const searchTerm = category;
-        document.getElementById('main-search').value = searchTerm;
+        // Split category string by commas and trim spaces (in case multiple categories)
+        const productCategories = product.category.split(',').map(cat => cat.trim().toLowerCase());
         
-        // Scroll to top before performing search
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Small delay to ensure scroll completes
-        setTimeout(() => {
-            performSearch();
-        }, 300);
+        // Return true if the target category is included in product's categories
+        return productCategories.includes(category.toLowerCase());
+    });
+
+    // Show filtered results
+    showCategoryResults(filteredProducts, category);
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// New function to show category results
+function showCategoryResults(results, category) {
+    document.getElementById('main-content').style.display = 'none';
+    document.getElementById('search-results').style.display = 'block';
+    
+    // Update results title
+    document.getElementById('results-count').textContent = 
+        `${results.length} ${category} perfume${results.length !== 1 ? 's' : ''}`;
+    
+    // Update the h2 title
+    const resultsHeader = document.querySelector('.search-results h2');
+    if (resultsHeader) {
+        resultsHeader.textContent = `${category} Collection`;
     }
+    
+    const grid = document.getElementById('search-results-grid');
+    if (results.length > 0) {
+        grid.innerHTML = results.map(product => createProductCard(product)).join('');
+        initLoadMore('search-results-grid');
+    } else {
+        grid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-search" style="font-size: 3rem; color: #ddd; margin-bottom: 1rem;"></i>
+                <h3 style="color: var(--secondary-black); margin-bottom: 1rem;">No ${category} perfumes found</h3>
+                <p style="color: #777;">Check back soon for new ${category.toLowerCase()} arrivals</p>
+                <button class="btn btn-outline" onclick="showHomePage()" style="margin-top: 1rem;">
+                    Back to Home
+                </button>
+            </div>
+        `;
+    }
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
     function performSearch() {
         const searchTerm = document.getElementById('main-search').value.toLowerCase().trim();
