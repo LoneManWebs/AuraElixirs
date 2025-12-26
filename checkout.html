@@ -24,19 +24,21 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html {
-            -webkit-text-size-adjust: 100%;
-            -webkit-font-smoothing: antialiased;
-        }
-
         body {
-            font-family: 'Inter', sans-serif;
-            color: var(--secondary-black);
-            background-color: var(--primary-white);
-            line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    font-family: 'Inter', sans-serif;
+    color: var(--secondary-black);
+    background-color: var(--primary-white);
+    line-height: 1.6;
+    min-height: 100vh;
+    /* REMOVE overflow-x: hidden; */
+}
+
+/* Add smooth scrolling to html */
+html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip; /* Use clip instead of hidden */
+}
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Crimson Text', serif;
@@ -1537,6 +1539,111 @@
 .shipping-scroller {
     will-change: transform;
 }
+
+/* FIX SCROLLING ON MOBILE */
+@media (max-width: 768px) {
+    body, html {
+        overflow-x: clip !important; /* Use clip instead of hidden */
+        overflow-y: auto !important; /* Ensure vertical scrolling works */
+        position: relative !important;
+        height: auto !important;
+        min-height: 100vh !important;
+    }
+    
+    /* Ensure all containers allow scrolling */
+    .checkout-container {
+        overflow: visible !important;
+        position: relative !important;
+    }
+    
+    /* Fix for iOS Safari */
+    @supports (-webkit-touch-callout: none) {
+        body {
+            position: relative;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        html {
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+    
+    /* Remove any sticky positioning that might interfere */
+    header {
+        position: relative !important;
+    }
+    
+    .checkout-steps {
+        position: relative !important;
+    }
+    
+    /* Ensure form sections don't interfere with scrolling */
+    .checkout-form {
+        position: relative;
+        overflow: visible;
+    }
+    
+    .checkout-section {
+        position: relative;
+        overflow: visible;
+    }
+    
+    /* Fix for mobile browsers */
+    body::after {
+        content: '';
+        display: table;
+        clear: both;
+    }
+}
+
+/* Fix for pull-to-refresh prevention that might be too aggressive */
+@media (max-width: 768px) {
+    body {
+        overscroll-behavior-y: auto; /* Allow normal scrolling behavior */
+    }
+    
+    /* Remove the touchmove event prevention CSS side-effects */
+    .checkout-container * {
+        touch-action: pan-y; /* Allow vertical panning (scrolling) */
+    }
+}
+
+/* Remove any fixed positioning issues */
+@media (max-width: 768px) {
+    * {
+        max-height: none !important; /* Remove max-height constraints */
+    }
+    
+    .order-items {
+        max-height: none !important;
+        overflow-y: visible !important;
+    }
+}
+
+/* Ensure viewport meta tag is working */
+@viewport {
+    width: device-width;
+    zoom: 1.0;
+}
+
+/* Ensure proper scrolling container */
+.checkout-form {
+    min-height: calc(100vh - 200px); /* Ensure enough height for scrolling */
+}
+
+/* Remove any max-height restrictions on mobile */
+@media (max-width: 768px) {
+    .order-items {
+        max-height: none !important;
+        overflow-y: visible !important;
+    }
+    
+    .order-summary {
+        max-height: none !important;
+    }
+}
     </style>
 </head>
 <body>
@@ -2431,12 +2538,21 @@
             setupEventListeners();
             adjustLayoutForMobile();
             
-            // Prevent pull-to-refresh on mobile
-            document.body.addEventListener('touchmove', function(e) {
-                if (window.scrollY === 0) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+          // Better pull-to-refresh handling
+if (isMobile()) {
+    let touchStartY = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    
+    document.addEventListener('touchmove', function(e) {
+        // Only prevent pull-to-refresh when at the top and pulling down
+        if (window.scrollY === 0 && e.touches[0].clientY > touchStartY) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+}
         });
 
         // Utility functions
